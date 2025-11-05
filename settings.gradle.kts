@@ -15,10 +15,8 @@ rootProject.name = "connxt-backend"
 
 include("libs:shared")
 include("libs:permission")
-include("libs:cron")
 include("libs:denovm")
 include("libs:email")
 include("libs:jwt")
-include("libs:webhook")
 include("services:migration")
 include("services:core")

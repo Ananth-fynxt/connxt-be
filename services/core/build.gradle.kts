@@ -24,11 +24,9 @@ dependencies {
     // Project modules
     implementation(project(":libs:shared"))
     implementation(project(":libs:permission"))
-    implementation(project(":libs:cron"))
     implementation(project(":libs:denovm"))
     implementation(project(":libs:email"))
     implementation(project(":libs:jwt"))
-    implementation(project(":libs:webhook"))
 
     implementation(libs.mapstruct)
     annotationProcessor(libs.mapstruct.processor)

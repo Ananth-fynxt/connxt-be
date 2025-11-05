@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import connxt.auth.dto.AuthResponse;
-import connxt.auth.dto.ExternalLoginRequest;
 import connxt.auth.dto.LoginRequest;
 import connxt.auth.service.AuthService;
 import connxt.shared.builder.ResponseBuilder;
@@ -28,14 +27,6 @@ public class AuthController {
   public ResponseEntity<ApiResponse<Object>> login(@Validated @RequestBody LoginRequest request) {
     log.info("Login request received for email: {}", request.getEmail());
     AuthResponse response = authService.login(request);
-    return responseBuilder.successResponse(response);
-  }
-
-  @PostMapping("/external/login")
-  public ResponseEntity<ApiResponse<Object>> externalLogin(
-      @Validated @RequestBody ExternalLoginRequest request) {
-    log.info("External login request received for customer: {}", request.getCustomerId());
-    AuthResponse response = authService.externalLogin(request);
     return responseBuilder.successResponse(response);
   }
 

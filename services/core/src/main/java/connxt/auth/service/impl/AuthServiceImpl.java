@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import connxt.auth.dto.AuthResponse;
-import connxt.auth.dto.CustomerInfo;
-import connxt.auth.dto.ExternalLoginRequest;
 import connxt.auth.dto.LoginRequest;
 import connxt.auth.dto.UserInfo;
 import connxt.auth.service.AuthService;
@@ -87,35 +85,6 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  @Override
-  @Transactional
-  public AuthResponse externalLogin(ExternalLoginRequest request) {
-    log.info("Attempting external login");
-
-    var customer =
-        userAuthService.authenticateCustomer(request.getCustomerId(), request.getSecretToken());
-    if (customer == null) {
-      throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, ErrorCode.AUTH_INVALID_CREDENTIALS.getCode());
-    }
-
-    try {
-      JwtTokenResponse accessTokenResponse = generateExternalApiAccessToken(customer);
-      JwtTokenResponse refreshTokenResponse = generateExternalApiRefreshToken(customer);
-
-      tokenManagementService.cleanupExpiredTokensForUser(customer.getCustomerId());
-
-      tokenManagementService.saveTokens(
-          accessTokenResponse, refreshTokenResponse, customer.getCustomerId());
-
-      log.info("External login successful");
-      return buildAuthResponse(accessTokenResponse, refreshTokenResponse.getToken());
-    } catch (JwtTokenGenerationException | JwtSigningKeyException e) {
-      log.error("Failed to generate token for external login", e);
-      throw new ResponseStatusException(
-          HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.TOKEN_ISSUANCE_FAILED.getCode());
-    }
-  }
 
   @Override
   @Transactional
@@ -215,57 +184,11 @@ public class AuthServiceImpl implements AuthService {
     return claims;
   }
 
-  private JwtTokenResponse generateExternalApiAccessToken(CustomerInfo customer) {
-    Map<String, Object> claims = buildExternalApiClaims(customer, TokenType.ACCESS.getValue());
-
-    JwtTokenRequest jwtRequest =
-        JwtTokenRequest.builder()
-            .issuer(jwtIssuer)
-            .audience(jwtAudience)
-            .subject(customer.getCustomerId())
-            .expiresAt(OffsetDateTime.now().plus(accessTokenExpiration))
-            .claims(claims)
-            .signingKeyId(signingKeyId)
-            .tokenType(TokenType.ACCESS)
-            .build();
-
-    return jwtExecutor.generateToken(jwtRequest);
-  }
-
-  private JwtTokenResponse generateExternalApiRefreshToken(CustomerInfo customer) {
-    Map<String, Object> claims = buildExternalApiClaims(customer, TokenType.REFRESH.getValue());
-
-    JwtTokenRequest jwtRequest =
-        JwtTokenRequest.builder()
-            .issuer(jwtIssuer)
-            .audience(jwtAudience)
-            .subject(customer.getCustomerId())
-            .expiresAt(OffsetDateTime.now().plus(refreshTokenExpiration))
-            .claims(claims)
-            .signingKeyId(refreshSigningKeyId)
-            .tokenType(TokenType.REFRESH)
-            .build();
-
-    return jwtExecutor.generateToken(jwtRequest);
-  }
-
-  private Map<String, Object> buildExternalApiClaims(CustomerInfo customer, String tokenType) {
-    Map<String, Object> claims = new HashMap<>();
-    claims.put("auth_type", AuthType.EXTERNAL_API.getValue());
-    claims.put("token_type", tokenType);
-    claims.put("scope", customer.getScope().getValue());
-    claims.put("environment_id", customer.getEnvironmentId());
-    claims.put("brand_id", customer.getBrandId());
-    claims.put("customer_id", customer.getCustomerId());
-    return claims;
-  }
 
   private JwtTokenResponse generateAccessTokenFromRefreshToken(
       String authType, JwtValidationResponse validationResult) {
     if (AuthType.APPLICATION_USER.getValue().equals(authType)) {
       return generateAccessTokenForApplicationUser(validationResult);
-    } else if (AuthType.EXTERNAL_API.getValue().equals(authType)) {
-      return generateAccessTokenForExternalApi(validationResult);
     } else {
       throw new ResponseStatusException(
           HttpStatus.UNAUTHORIZED, ErrorCode.TOKEN_VALIDATION_FAILED.getCode());
@@ -277,16 +200,6 @@ public class AuthServiceImpl implements AuthService {
     String userId = (String) validationResult.getClaims().get("user_id");
     UserInfo user = userAuthService.getUserInfoById(userId);
     return generateUserToken(user);
-  }
-
-  private JwtTokenResponse generateAccessTokenForExternalApi(
-      JwtValidationResponse validationResult) {
-    String customerId = (String) validationResult.getClaims().get("customer_id");
-    String brandId = (String) validationResult.getClaims().get("brand_id");
-    String environmentId = (String) validationResult.getClaims().get("environment_id");
-
-    CustomerInfo customer = userAuthService.getCustomerInfoById(customerId, brandId, environmentId);
-    return generateExternalApiAccessToken(customer);
   }
 
   private JwtValidationResponse validateRefreshToken(String refreshToken) {
@@ -331,16 +244,10 @@ public class AuthServiceImpl implements AuthService {
 
     JwtValidationResponse result = jwtExecutor.validateToken(request);
     if (result.isValid()) {
-      // For regular user logins, use user_id
+      // For system user logins, use user_id
       String userId = (String) result.getClaims().get("user_id");
       if (userId != null) {
         return userId;
-      }
-
-      // For external API logins, use customer_id
-      String customerId = (String) result.getClaims().get("customer_id");
-      if (customerId != null) {
-        return customerId;
       }
     }
     return null;
