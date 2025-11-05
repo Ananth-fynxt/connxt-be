@@ -2,7 +2,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
-    container_name: nexxus-postgres
+    container_name: connxt-postgres
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -17,14 +17,14 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - nexxus-network
+      - connxt-network
 
-  # Nexxus Backend Application
-  nexxus-backend:
+  # Connxt Backend Application
+  connxt-backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nexxus-backend
+    container_name: connxt-backend
     environment:
       # Database Configuration (from .envrc)
       DATABASE_HOST: postgres
@@ -50,17 +50,9 @@ services:
       JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION}
       JWT_REFRESH_TOKEN_EXPIRATION: ${JWT_REFRESH_TOKEN_EXPIRATION}
 
-      # Widget Session Management Configuration
-      WIDGET_SESSION_HMAC_KEY: ${WIDGET_SESSION_HMAC_KEY}
-      WIDGET_SESSION_FINGERPRINT_ENCRYPTION_KEY: ${WIDGET_SESSION_FINGERPRINT_ENCRYPTION_KEY}
-
       # Email Configuration
       EMAIL_CONNECTION_STRING: ${EMAIL_CONNECTION_STRING}
       EMAIL_SENDER_ADDRESS: ${EMAIL_SENDER_ADDRESS}
-
-      # Fixer API Configuration
-      FIXER_API_ACCESS_KEY: ${FIXER_API_ACCESS_KEY}
-      FIXER_API_SCHEDULE: ${FIXER_API_SCHEDULE}
     ports:
       - "8001:8001"
       - "8000:8000"
@@ -74,12 +66,12 @@ services:
       retries: 3
       start_period: 60s
     networks:
-      - nexxus-network
+      - connxt-network
     restart: unless-stopped
 
 volumes:
   postgres_data:
 
 networks:
-  nexxus-network:
+  connxt-network:
     driver: bridge

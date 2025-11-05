@@ -1,5 +1,5 @@
 /*
- * Gradle Settings for Nexxus Backend
+ * Gradle Settings for Connxt Backend
  * 
  * This file configures the multi-project build structure:
  * - libs/: Shared libraries and utilities
@@ -11,7 +11,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
-rootProject.name = "nexxus-backend"
+rootProject.name = "connxt-backend"
 
 include("libs:shared")
 include("libs:permission")

@@ -3,7 +3,7 @@ plugins {
 }
 
 application {
-    mainClass.set("nexxus.migration.DatabaseMigration")
+    mainClass.set("connxt.migration.DatabaseMigration")
 }
 
 dependencies {

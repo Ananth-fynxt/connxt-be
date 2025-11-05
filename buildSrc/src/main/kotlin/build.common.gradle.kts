@@ -31,7 +31,7 @@ spotless {
             "javax",
             "org",
             "com",
-            "nexxus"
+            "connxt"
         )
         
         // Remove unused imports

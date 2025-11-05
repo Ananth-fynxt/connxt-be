@@ -25,25 +25,25 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN groupadd -r nexxus && useradd -r -g nexxus nexxus
+RUN groupadd -r connxt && useradd -r -g connxt connxt
 
 # Create /app directory with proper ownership
-RUN mkdir -p /app && chown -R nexxus:nexxus /app
+RUN mkdir -p /app && chown -R connxt:connxt /app
 
 # Switch to non-root user
-USER nexxus
-WORKDIR /home/nexxus
+USER connxt
+WORKDIR /home/connxt
 
 # Install Deno for the non-root user
 RUN curl -fsSL https://deno.land/install.sh | sh
-ENV DENO_INSTALL="/home/nexxus/.deno"
-ENV PATH="/home/nexxus/.deno/bin:$PATH"
+ENV DENO_INSTALL="/home/connxt/.deno"
+ENV PATH="/home/connxt/.deno/bin:$PATH"
 
 # Switch working directory for Spring Boot app
 WORKDIR /app
 
 # Copy the built JAR from build stage with correct ownership
-COPY --from=build --chown=nexxus:nexxus /app/services/core/build/libs/*.jar app.jar
+COPY --from=build --chown=connxt:connxt /app/services/core/build/libs/*.jar app.jar
 
 # Expose application ports
 EXPOSE 8001

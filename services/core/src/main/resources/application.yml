@@ -1,6 +1,6 @@
 spring:
   application:
-    name: nexxus-backend
+    name: connxt-backend
   profiles:
     active: prod
   config:

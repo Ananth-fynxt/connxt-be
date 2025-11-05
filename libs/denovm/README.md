@@ -14,14 +14,14 @@ denovm executes dynamic JavaScript in an isolated Deno runtime from Java/Spring.
 
 ## Architecture
 
-- Java service: `nexxus.denovm.service.impl.DenoVMServiceImpl`
+- Java service: `connxt.denovm.service.impl.DenoVMServiceImpl`
   - Accepts a `DenoVMRequest` and returns a `DenoVMResult`
   - Single-run: spawns `deno run ... subprocess-executor.js`
   - Worker mode: submits requests to a `DenoWorkerPool` of persistent processes
-- Worker pool: `nexxus.denovm.service.pool.*`
+- Worker pool: `connxt.denovm.service.pool.*`
   - `DenoWorkerPool` manages N `DenoWorker` processes
   - Each worker speaks NDJSON on stdin/stdout
-- JS executor: `libs/denovm/src/main/resources/nexxus/denovm/subprocess-executor.js`
+- JS executor: `libs/denovm/src/main/resources/connxt/denovm/subprocess-executor.js`
   - Single-run (default) or worker mode (when arg `deno-vm-worker` is present)
   - Loads the user script from a temp file path and invokes an exported async function by name
 
@@ -54,7 +54,7 @@ Runtime requirement: Deno must be available inside the runtime environment. The 
 
 ## Spring configuration
 
-All configuration is centralized in `nexxus.denovm.config.DenoVMProperties` (prefix `deno.vm`). Example:
+All configuration is centralized in `connxt.denovm.config.DenoVMProperties` (prefix `deno.vm`). Example:
 
 ```yaml
 deno:

@@ -1,11 +1,11 @@
-# Nexxus Backend
+# Connxt Backend
 
 A Spring Boot-based backend application built using Gradle with a modular architecture and centralized environment configuration via .env file.
 
 ## 🏗️ Project Structure
 
 ```
-nexxus-backend/
+connxt-backend/
 ├── buildSrc/                          # Build logic and conventions
 │   └── src/main/kotlin/               # Gradle build scripts
 ├── gradle/                            # Gradle configuration and wrapper
@@ -45,7 +45,7 @@ nexxus-backend/
 1. **Clone and build:**
    ```bash
    git clone <repository-url>
-   cd nexxus-backend
+   cd connxt-backend
    cp .env.example .env  # Copy and configure environment variables
    ./gradlew clean build
    ```
@@ -84,7 +84,7 @@ nexxus-backend/
 ./gradlew :services:core:bootRun --debug-jvm
 
 # Stop the application
-pkill -f "nexxus.NexxusApplication"
+pkill -f "connxt.ConnxtApplication"
 ```
 
 ### **Kill Port**

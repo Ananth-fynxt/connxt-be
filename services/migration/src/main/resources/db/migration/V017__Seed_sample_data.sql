@@ -1,36 +1,36 @@
 -- Insert users first for System, FI and Brand (dummy password: d2ZZa17IF8ZGoVtL)
 INSERT INTO users (id, email, password, created_at, updated_at, created_by, updated_by) VALUES
-('usr_sys_001', 'system.admin@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_sys_002', 'system.operator@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_001', 'admin@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_002', 'ananth@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_003', 'lingesh@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_004', 'deepan@nexxus.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_sys_001', 'system.admin@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_sys_002', 'system.operator@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_fi_001', 'admin@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_fi_002', 'ananth@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_fi_003', 'lingesh@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
+('usr_fi_004', 'deepan@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_001', 'john.admin@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_002', 'jane.manager@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_003', 'bob.agent@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO system_users (id, name, email, user_id, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('sys_001', 'System Administrator', 'system.admin@nexxus.com', 'usr_sys_001', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('sys_002', 'System Operator', 'system.operator@nexxus.com', 'usr_sys_002', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system');
+('sys_001', 'System Administrator', 'system.admin@connxt.com', 'usr_sys_001', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('sys_002', 'System Operator', 'system.operator@connxt.com', 'usr_sys_002', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO fi (id, name, email, user_id, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('fi_001', 'Nexxus Financial Group', 'admin@nexxus.com', 'usr_fi_001', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_002', 'Nexxus Financial Group', 'ananth@nexxus.com', 'usr_fi_002', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_003', 'Nexxus Financial Group', 'lingesh@nexxus.com', 'usr_fi_003', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_004', 'Nexxus Financial Group', 'deepan@nexxus.com', 'usr_fi_004', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system');
+('fi_001', 'Connxt Financial Group', 'admin@connxt.com', 'usr_fi_001', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('fi_002', 'Connxt Financial Group', 'ananth@connxt.com', 'usr_fi_002', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('fi_003', 'Connxt Financial Group', 'lingesh@connxt.com', 'usr_fi_003', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('fi_004', 'Connxt Financial Group', 'deepan@connxt.com', 'usr_fi_004', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO brands (id, fi_id, currencies, name, email, created_at, updated_at, created_by, updated_by) VALUES
-('brn_001', 'fi_001', ARRAY['USD', 'EUR', 'GBP'], 'Nexxus Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_002', 'fi_002', ARRAY['USD', 'EUR', 'GBP'], 'Nexxus Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_003', 'fi_003', ARRAY['USD', 'EUR', 'GBP'], 'Nexxus Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_004', 'fi_004', ARRAY['USD', 'EUR', 'GBP'], 'Nexxus Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system');
+('brn_001', 'fi_001', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_002', 'fi_002', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_003', 'fi_003', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_004', 'fi_004', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO environments (id, name, secret, token, origin, success_redirect_url, failure_redirect_url, brand_id, created_at, updated_at, created_by, updated_by) VALUES
-('env_uat_001', 'Nexxus UAT Environment', 'sec_nexxus_uat_123', 'tok_nexxus_uat_456', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_001', NOW(), NOW(), 'system', 'system'),
-('env_uat_002', 'Nexxus UAT Environment', 'sec_nexxus_uat_1234', 'tok_nexxus_uat_4567', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_002', NOW(), NOW(), 'system', 'system'),
-('env_uat_003', 'Nexxus UAT Environment', 'sec_nexxus_uat_1235', 'tok_nexxus_uat_4568', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_003', NOW(), NOW(), 'system', 'system'),
-('env_uat_004', 'Nexxus UAT Environment', 'sec_nexxus_uat_1236', 'tok_nexxus_uat_4569', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_004', NOW(), NOW(), 'system', 'system');
+('env_uat_001', 'Connxt UAT Environment', 'sec_connxt_uat_123', 'tok_connxt_uat_456', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_001', NOW(), NOW(), 'system', 'system'),
+('env_uat_002', 'Connxt UAT Environment', 'sec_connxt_uat_1234', 'tok_connxt_uat_4567', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_002', NOW(), NOW(), 'system', 'system'),
+('env_uat_003', 'Connxt UAT Environment', 'sec_connxt_uat_1235', 'tok_connxt_uat_4568', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_003', NOW(), NOW(), 'system', 'system'),
+('env_uat_004', 'Connxt UAT Environment', 'sec_connxt_uat_1236', 'tok_connxt_uat_4569', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_004', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO brand_roles (id, brand_id, environment_id, name, permission, created_at, updated_at, created_by, updated_by) VALUES
 ('role_admin_001', 'brn_001', 'env_uat_001', 'admin', '{
@@ -95,9 +95,9 @@ INSERT INTO brand_roles (id, brand_id, environment_id, name, permission, created
 }', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO brand_users (id, brand_id, environment_id, brand_role_id, name, email, user_id, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('user_admin_001', 'brn_001', 'env_uat_001', 'role_admin_001', 'John Admin', 'john.admin@nexxus.com', 'usr_brand_001', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('user_manager_001', 'brn_001', 'env_uat_001', 'role_manager_001', 'Jane Manager', 'jane.manager@nexxus.com', 'usr_brand_002', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('user_agent_001', 'brn_001', 'env_uat_001', 'role_agent_001', 'Bob Agent', 'bob.agent@nexxus.com', 'usr_brand_003', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system');
+('user_admin_001', 'brn_001', 'env_uat_001', 'role_admin_001', 'John Admin', 'john.admin@connxt.com', 'usr_brand_001', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('user_manager_001', 'brn_001', 'env_uat_001', 'role_manager_001', 'Jane Manager', 'jane.manager@connxt.com', 'usr_brand_002', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
+('user_agent_001', 'brn_001', 'env_uat_001', 'role_agent_001', 'Bob Agent', 'bob.agent@connxt.com', 'usr_brand_003', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO brand_customer (id, brand_id, environment_id, name, email, tag, account_type, country, currencies, customer_meta, scope, status, created_at, updated_at, created_by, updated_by) VALUES
 ('cust_001', 'brn_001', 'env_uat_001', 'Premium Customer A', 'customer.a@example.com', 'premium', 'individual', 'US', ARRAY['USD', 'EUR'], '{"tier": "gold", "kyc_status": "verified"}', 'EXTERNAL', 'ACTIVE', NOW(), NOW(), 'system', 'system');
@@ -991,9 +991,9 @@ INSERT INTO conversion_rate (id, version, brand_id, environment_id, status, sour
 ('conv_003', 1, 'brn_001', 'env_uat_001', 'ENABLED', 'USD', 'GBP', 0.80, NOW(), NOW(), 'system', 'system');
 
 INSERT INTO webhooks (id, status_type, url, retry, brand_id, environment_id, status, created_at, updated_at, created_by, updated_by) VALUES
-('webhook_001', 'SUCCESS', 'https://api.nexxus.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('webhook_002', 'FAILURE', 'https://api.nexxus.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('webhook_003', 'NOTIFICATION', 'https://api.nexxus.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system');
+('webhook_001', 'SUCCESS', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
+('webhook_002', 'FAILURE', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
+('webhook_003', 'NOTIFICATION', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system');
 
 UPDATE flow_definitions SET flow_configuration = '{
    "FAILED": [],

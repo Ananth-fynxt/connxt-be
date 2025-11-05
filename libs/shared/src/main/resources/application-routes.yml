@@ -1,7 +1,7 @@
 # Route Configuration
 # This file contains all route definitions for the application
 
-nexxus:
+connxt:
   routes:
     # Public paths that don't require authentication
     public-paths:
