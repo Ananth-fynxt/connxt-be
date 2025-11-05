@@ -1,0 +1,15 @@
+{
+	"recommendations": [
+		"redhat.java",
+		"vscjava.vscode-java-debug",
+		"vscjava.vscode-gradle",
+		"richardwillis.vscode-spotless-gradle",
+		"naco-siren.gradle-language",
+		"esbenp.prettier-vscode",
+		"bruno-api-client.bruno",
+		"typespec.typespec-vscode",
+		"redhat.vscode-yaml",
+		"redhat.vscode-xml",
+		"biomejs.biome"
+	]
+}

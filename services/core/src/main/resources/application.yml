@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: nexxus-backend
+  profiles:
+    active: prod
+  config:
+    import:
+      - optional:classpath:/application-common.yml
+# Management Configuration (Core service specific)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+transaction:
+  processing:
+    # Timeout settings
+    timeouts:
+      step-execution: 30s
+      flow-completion: 5m
+    
+    # Retry settings
+    retry:
+      max-attempts: 3
+      backoff-delay: 1s
+    
+    # Logging settings
+    logging:
+      log-all-transitions: true
+      log-step-execution-time: true
+  
+  flow-configuration:
+    cache:
+      maximum-size: 5000
+      expire-after-write: 5

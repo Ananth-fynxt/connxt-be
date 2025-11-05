@@ -1,0 +1,95 @@
+trigger:
+    branches:
+      include:
+        - "main"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  buildTag: "$(Build.BuildId)"
+
+jobs:
+  - job: SpotlessCheck
+    displayName: "Check Formatting with Spotless"
+    steps:
+      - script: ./gradlew spotlessCheck
+        workingDirectory: $(Build.SourcesDirectory)
+        displayName: "Run Spotless Check"
+
+  # - job: DatabaseCleanup
+  #   displayName: "Clean up Database (Drop Tables & Enums)"
+  #   dependsOn: SpotlessCheck
+  #   condition: succeeded()
+  #   steps:
+  #     - script: |
+  #         echo "Dropping all tables and enums from PostgreSQL..."
+  #         PGPASSWORD=$(DATABASE_PASSWORD) psql \
+  #           -h $(DATABASE_HOST) \
+  #           -p $(DATABASE_PORT) \
+  #           -U $(DATABASE_USERNAME) \
+  #           -d $(DATABASE_NAME) \
+  #           -v ON_ERROR_STOP=1 \
+  #           -c "DO \$\$ 
+  #           DECLARE r RECORD;
+  #           BEGIN
+  #             FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+  #                 EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+  #             END LOOP;
+
+  #             FOR r IN (SELECT typname FROM pg_type WHERE typtype = 'e') LOOP
+  #                 EXECUTE 'DROP TYPE IF EXISTS ' || quote_ident(r.typname) || ' CASCADE';
+  #             END LOOP;
+
+  #             EXECUTE 'DROP TABLE IF EXISTS flyway_schema_history CASCADE';
+  #           END
+  #           \$\$;"
+  #       displayName: "Drop All Tables and Enums"
+  #       env:
+  #         DATABASE_HOST: $(DATABASE_HOST)
+  #         DATABASE_PORT: $(DATABASE_PORT)
+  #         DATABASE_NAME: $(DATABASE_NAME)
+  #         DATABASE_USERNAME: $(DATABASE_USERNAME)
+  #         DATABASE_PASSWORD: $(DATABASE_PASSWORD)
+
+  # - job: Migration
+  #   displayName: "Run Migration"
+  #   dependsOn: SpotlessCheck
+  #   condition: succeeded()
+  #   steps:
+  #     - script: ./gradlew :services:migration:run
+  #       workingDirectory: $(Build.SourcesDirectory)
+  #       displayName: "Run Migration"
+  #       env:
+  #         DATABASE_HOST: $(DATABASE_HOST)
+  #         DATABASE_PORT: $(DATABASE_PORT)
+  #         DATABASE_NAME: $(DATABASE_NAME)
+  #         DATABASE_USERNAME: $(DATABASE_USERNAME)
+  #         DATABASE_PASSWORD: $(DATABASE_PASSWORD)
+
+  - job: BuildAndPush
+    displayName: "Build & Push Docker Image"
+    dependsOn: SpotlessCheck
+    condition: succeeded()
+    steps:
+      - task: Docker@2
+        displayName: "Build & Push Docker Image"
+        inputs:
+          command: buildAndPush
+          containerRegistry: $(azureContainerRegistry)
+          repository: $(repositoryName)
+          dockerfile: "Dockerfile"
+          tags: $(buildTag)
+
+  - job: Deploy
+    displayName: "Deploy to Azure Container Apps"
+    dependsOn: BuildAndPush
+    condition: succeeded()
+    steps:
+      - task: AzureContainerApps@1
+        displayName: "Deploy Container"
+        inputs:
+          azureSubscription: $(azureSubscription)
+          imageToDeploy: "$(registryName).azurecr.io/$(repositoryName):$(buildTag)"
+          containerAppName: $(containerAppName)
+          resourceGroup: $(azureResourceGroup)

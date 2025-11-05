@@ -1,0 +1,178 @@
+[versions]
+# =============================================================================
+# CORE FRAMEWORK VERSIONS
+# =============================================================================
+spring-boot = "3.5.4"
+spring-dependency-management = "1.1.6"
+
+# =============================================================================
+# DATABASE VERSIONS
+# =============================================================================
+flyway = "10.8.1"
+postgresql = "42.7.2"
+hikaricp = "5.1.0"
+
+# =============================================================================
+# AUTHENTICATION VERSIONS
+# =============================================================================
+jjwt = "0.12.3"
+
+# =============================================================================
+# DEVELOPMENT TOOLS VERSIONS
+# =============================================================================
+json-schema-validator = "1.5.9"
+lombok = "1.18.30"
+spotless = "6.25.0"
+spring-doc = "2.8.8"
+mapstruct = "1.6.3"
+hypersistence = "3.10.3"
+json-logic = "1.0.1"
+
+# =============================================================================
+# BACKGROUND JOB PROCESSING VERSIONS
+# =============================================================================
+jobrunr = "7.2.0"
+
+# =============================================================================
+# EMAIL SERVICE VERSIONS
+# =============================================================================
+azure-communication-services = "1.0.0"
+
+# =============================================================================
+# CACHING VERSIONS
+# =============================================================================
+caffeine = "3.1.8"
+
+# =============================================================================
+# ASPECTJ VERSIONS
+# =============================================================================
+aspectj = "1.9.21"
+
+[libraries]
+# =============================================================================
+# RULE ENGINE (Versions managed by BOM if compatible, otherwise explicit in build.gradle.kts)
+# =============================================================================
+json-logic = { module = "io.github.jamsesso:json-logic-java", version.ref = "json-logic" }
+
+# =============================================================================
+# SPRING BOOT BOM & STARTERS (Versions managed by BOM)
+# =============================================================================
+spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+spring-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
+spring-boot-starter-jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-jdbc" }
+spring-boot-starter-security = { group = "org.springframework.boot", name = "spring-boot-starter-security" }
+spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
+spring-boot-starter-aop = { group = "org.springframework.boot", name = "spring-boot-starter-aop" }
+
+# =============================================================================
+# JSON PROCESSING (Managed by Spring Boot BOM)
+# =============================================================================
+jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind" }
+jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
+
+# =============================================================================
+# AUTHENTICATION DEPENDENCIES (Versions managed by version.ref)
+# =============================================================================
+jjwt-api = { group = "io.jsonwebtoken", name = "jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { group = "io.jsonwebtoken", name = "jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { group = "io.jsonwebtoken", name = "jjwt-jackson", version.ref = "jjwt" }
+
+# =============================================================================
+# DATABASE DEPENDENCIES (Versions managed by version.ref)
+# =============================================================================
+postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
+hibernate-envers = { group = "org.hibernate.orm", name = "hibernate-envers" }
+
+# =============================================================================
+# DATABASE MIGRATION (Versions managed by version.ref)
+# =============================================================================
+flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
+flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
+
+# =============================================================================
+# DEVELOPMENT TOOLS (Versions managed by version.ref)
+# =============================================================================
+json-schema-validator = { group = "com.networknt", name = "json-schema-validator", version.ref = "json-schema-validator" }
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+
+# =============================================================================
+# ASPECTJ DEPENDENCIES (Versions managed by version.ref)
+# =============================================================================
+aspectj-weaver = { group = "org.aspectj", name = "aspectjweaver", version.ref = "aspectj" }
+aspectj-rt = { group = "org.aspectj", name = "aspectjrt", version.ref = "aspectj" }
+spring-doc-openapi-starter-webmvc-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "spring-doc" }
+mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
+lombokMapstructBinding = { group = "org.projectlombok", name = "lombok-mapstruct-binding", version = "0.2.0" }
+hypersistence = { group = "io.hypersistence", name="hypersistence-utils-hibernate-63", version.ref = "hypersistence" }
+
+# =============================================================================
+# BACKGROUND JOB PROCESSING (Versions managed by version.ref)
+# =============================================================================
+jobrunr-spring-boot-starter = { group = "org.jobrunr", name = "jobrunr-spring-boot-3-starter", version.ref = "jobrunr" }
+
+# =============================================================================
+# EMAIL SERVICE DEPENDENCIES (Versions managed by version.ref)
+# =============================================================================
+azure-communication-services-email = { group = "com.azure", name = "azure-communication-email", version.ref = "azure-communication-services" }
+
+# =============================================================================
+# CACHING DEPENDENCIES (Versions managed by version.ref)
+# =============================================================================
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
+# =============================================================================
+# GRADLE PLUGINS (Versions managed by version.ref)
+# =============================================================================
+dependency-management-gradle-plugin = { group = "io.spring.dependency-management", name = "io.spring.dependency-management.gradle.plugin", version.ref = "spring-dependency-management" }
+flyway-gradle-plugin = { group = "org.flywaydb", name = "flyway-gradle-plugin", version.ref = "flyway" }
+spotless-plugin-gradle = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless" }
+spring-boot-gradle-plugin = { group = "org.springframework.boot", name = "org.springframework.boot.gradle.plugin", version.ref = "spring-boot" }
+
+[plugins]
+# =============================================================================
+# GRADLE PLUGINS
+# =============================================================================
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+
+[bundles]
+# =============================================================================
+# SPRING BOOT BUNDLES (Versions managed by BOM)
+# =============================================================================
+spring-boot-data = ["spring-boot-starter-data-jpa", "spring-boot-starter-jdbc"]
+spring-boot-security = ["spring-boot-starter-security"]
+spring-boot-web = ["spring-boot-starter-web", "spring-boot-starter-actuator", "spring-boot-starter-validation"]
+
+# =============================================================================
+# AUTHENTICATION BUNDLES (Versions managed by version.ref)
+# =============================================================================
+# Note: JJWT bundle includes all dependencies, but individual modules should use specific scopes
+
+# =============================================================================
+# DATABASE BUNDLES (Versions managed by version.ref)
+# =============================================================================
+database-jdbc = ["spring-boot-starter-data-jpa", "spring-boot-starter-jdbc", "postgresql", "hikaricp"]
+flyway = ["flyway-core", "flyway-database-postgresql"]
+
+# =============================================================================
+# DEVELOPMENT BUNDLES (Versions managed by version.ref)
+# =============================================================================
+development = ["lombok"]
+validation = ["json-schema-validator"]
+mapstruct = ["mapstruct", "mapstruct-processor"]
+hypersistence = ["hypersistence"]
+
+# =============================================================================
+# BACKGROUND JOB PROCESSING BUNDLES (Versions managed by version.ref)
+# =============================================================================
+jobrunr = ["jobrunr-spring-boot-starter"]
+
+# =============================================================================
+# CACHING BUNDLES (Versions managed by version.ref)
+# =============================================================================
+caching = ["caffeine"]

@@ -1,0 +1,85 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: nexxus-postgres
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexxus-network
+
+  # Nexxus Backend Application
+  nexxus-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexxus-backend
+    environment:
+      # Database Configuration (from .envrc)
+      DATABASE_HOST: postgres
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+
+      # Backend Server URL
+      BACKEND_SERVER_URL: ${BACKEND_SERVER_URL}
+
+      # Frontend URL
+      FRONTEND_URL: ${FRONTEND_URL}
+
+      # Flyway Configuration
+      FLYWAY_ENABLED: ${FLYWAY_ENABLED}
+
+      # JWT Configuration
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
+      JWT_SIGNING_KEY_ID: ${JWT_SIGNING_KEY_ID}
+      JWT_REFRESH_SIGNING_KEY_ID: ${JWT_REFRESH_SIGNING_KEY_ID}
+      JWT_ACCESS_TOKEN_EXPIRATION: ${JWT_ACCESS_TOKEN_EXPIRATION}
+      JWT_REFRESH_TOKEN_EXPIRATION: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
+      # Widget Session Management Configuration
+      WIDGET_SESSION_HMAC_KEY: ${WIDGET_SESSION_HMAC_KEY}
+      WIDGET_SESSION_FINGERPRINT_ENCRYPTION_KEY: ${WIDGET_SESSION_FINGERPRINT_ENCRYPTION_KEY}
+
+      # Email Configuration
+      EMAIL_CONNECTION_STRING: ${EMAIL_CONNECTION_STRING}
+      EMAIL_SENDER_ADDRESS: ${EMAIL_SENDER_ADDRESS}
+
+      # Fixer API Configuration
+      FIXER_API_ACCESS_KEY: ${FIXER_API_ACCESS_KEY}
+      FIXER_API_SCHEDULE: ${FIXER_API_SCHEDULE}
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - nexxus-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  nexxus-network:
+    driver: bridge

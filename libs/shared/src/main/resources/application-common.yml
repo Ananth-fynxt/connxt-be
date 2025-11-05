@@ -1,0 +1,218 @@
+# Common Application Configuration
+# This file contains shared configuration for all services
+
+spring:
+  # Import additional configuration files
+  config:
+    import:
+      - classpath:application-routes.yml
+  # Database Configuration (JDBC)
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: NexxusHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate  # Use Flyway for schema management
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 20
+          time_zone: UTC
+        order_inserts: true
+        order_updates: true
+        type:
+          prefer_native_enum_types: true
+        query:
+          in_clause_parameter_padding: true
+        # Hibernate Envers Configuration
+        envers:
+          audit_table_suffix: _aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+          store_data_at_delete: true
+          default_schema: public
+        # Use legacy naming strategy for sequences to avoid _seq suffix
+        id:
+          db_structure_naming_strategy: legacy
+
+# Server Configuration
+server:
+  port: 8001
+
+# API Configuration
+api:
+  prefix: /api/v1
+  frontend-url: http://localhost:3000,http://localhost:5173,${FRONTEND_URL}
+  backend-server-url: ${BACKEND_SERVER_URL}
+  swagger:
+    server-url: ${BACKEND_SERVER_URL},http://localhost:8001
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    nexxus: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.springframework.web.cors: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [correlationId:%X{correlationId}] %msg%n"
+
+
+# Security Configuration
+security:
+  jwt:
+    issuer: ${JWT_ISSUER}
+    audience: ${JWT_AUDIENCE}
+    signing-key-id: ${JWT_SIGNING_KEY_ID}
+    refresh-signing-key-id: ${JWT_REFRESH_SIGNING_KEY_ID}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+    refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+
+# Swagger Configuration
+swagger:
+  enabled: true
+
+# CORS Configuration
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:5173,${FRONTEND_URL}
+  allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# JobRunr Configuration
+jobrunr:
+  # Database configuration
+  database:
+    skip-create: false
+    table-prefix: ""
+    database-name: jobrunr
+    type: sql
+  
+  # Job configuration
+  jobs:
+    default-number-of-retries: 10
+    retry-back-off-time-seed: 3
+    metrics:
+      enabled: false
+  
+  # Job scheduler configuration
+  job-scheduler:
+    enabled: true
+  
+  # Background job server configuration
+  background-job-server:
+    enabled: true
+    worker-count:  # Auto-detect based on CPU cores
+    poll-interval-in-seconds: 15
+    delete-succeeded-jobs-after: 36h
+    permanently-delete-deleted-jobs-after: 72h
+    metrics:
+      enabled: true
+  
+  # Dashboard configuration
+  dashboard:
+    enabled: true
+    path: /jobrunr-dashboard
+  
+  # Miscellaneous configuration
+  miscellaneous:
+    allow-anonymous-data-usage: true
+
+# Cron Job Configuration
+cron:
+  # Job configuration
+  job:
+    default-max-retries: 3
+  
+  # Retry strategy configuration
+  retry:
+    base-delay-seconds: 1
+    max-delay-seconds: 300
+    backoff-multiplier: 2.0
+
+# Widget Session Management Configuration
+widget:
+  session:
+    # HMAC Key Configuration
+    hmac:
+      key: ${WIDGET_SESSION_HMAC_KEY}
+      version: v1
+    
+    # Default Session Configuration
+    default:
+      timeout-minutes: 60
+      auto-extend: true
+      max-extensions: 3
+    
+    # Fingerprint Configuration
+    fingerprint:
+      similarity-threshold: 0.1
+      encryption:
+        key: ${WIDGET_SESSION_FINGERPRINT_ENCRYPTION_KEY}
+        enabled: true
+      
+    # Security Configuration
+    security:
+      token-length-bytes: 48
+      ip-anomaly-detection: true
+      strict-fingerprint-matching: false
+
+# Webhook Integration Configuration
+webhook:
+  integration:
+    # Timeout Configuration
+    default-timeout: 30000
+    connection-timeout-ms: 10000
+    read-timeout-ms: 30000
+    
+    # Retry Configuration
+    max-retry-delay-seconds: 3600
+    retry-multiplier: 2.0
+    default-retry-count: 3
+    
+    # Security Configuration
+    enable-signature-verification: true
+    default-user-agent: Nexxus-Webhook/1.0
+    
+    # Logging Configuration
+    enable-detailed-logging: true
+    
+    # Performance Configuration
+    max-payload-size-bytes: 1048576
+    
+    # Health Check Configuration
+    enable-health-checks: true
+    health-check-timeout-ms: 5000
+
+# Fixer API Integration Configuration
+fixer:
+  api:
+    base-url: https://data.fixer.io/api
+    access-key: ${FIXER_API_ACCESS_KEY}
+    schedule: ${FIXER_API_SCHEDULE}
+    job-name: "fixer-api-exchange-rates"
+    description: "Fetch latest exchange rates from Fixer API"
+
+# Email Configuration
+email:
+  enabled: true
+  connection-string: ${EMAIL_CONNECTION_STRING}
+  sender-address: ${EMAIL_SENDER_ADDRESS}
+  enable-detailed-logging: false
