@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import connxt.auth.entity.Token;
 import connxt.auth.repository.TokenRepository;
+import connxt.auth.service.util.TokenUtils;
 import connxt.jwt.dto.JwtTokenResponse;
-import connxt.session.service.util.TokenUtils;
 import connxt.shared.constants.ErrorCode;
 import connxt.shared.constants.TokenStatus;
 import connxt.shared.constants.TokenType;

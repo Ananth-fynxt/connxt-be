@@ -9,7 +9,6 @@ import org.springframework.web.server.ResponseStatusException;
 import connxt.shared.builder.dto.ApiResponse;
 import connxt.shared.builder.impl.ResponseBuilderImpl;
 import connxt.shared.constants.ErrorCode;
-import connxt.shared.exception.PermissionDeniedException;
 import connxt.shared.exception.RoleNotFoundException;
 import connxt.shared.exception.TransactionException;
 
@@ -40,14 +39,6 @@ public class GlobalExceptionHandler {
     ErrorCode errorCode = getErrorCodeFromCode(String.valueOf(ex.code()));
     HttpStatus httpStatus = ex.category().http();
     return responseBuilder.errorResponse(errorCode, httpStatus.getReasonPhrase(), httpStatus);
-  }
-
-  @ExceptionHandler(PermissionDeniedException.class)
-  public ResponseEntity<ApiResponse<Object>> handlePermissionDeniedException(
-      PermissionDeniedException ex) {
-    log.warn("Permission denied: {}", ex.getMessage());
-    return responseBuilder.errorResponse(
-        ErrorCode.PERMISSION_DENIED, ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler(RoleNotFoundException.class)

@@ -1,7 +1,5 @@
 package connxt.shared.context;
 
-import java.util.Map;
-
 public class BrandEnvironmentContextHolder {
 
   private static final ThreadLocal<BrandEnvironmentContext> contextHolder = new ThreadLocal<>();
@@ -34,11 +32,6 @@ public class BrandEnvironmentContextHolder {
     return context != null ? context.getEnvironmentId() : null;
   }
 
-  public static String getRoleId() {
-    BrandEnvironmentContext context = getContext();
-    return context != null ? context.getRoleId() : null;
-  }
-
   public static String getUserId() {
     BrandEnvironmentContext context = getContext();
     return context != null ? context.getUserId() : null;
@@ -52,10 +45,5 @@ public class BrandEnvironmentContextHolder {
   public static String getAuthType() {
     BrandEnvironmentContext context = getContext();
     return context != null ? context.getAuthType() : null;
-  }
-
-  public static Map<String, Object> getRolePermissions() {
-    BrandEnvironmentContext context = getContext();
-    return context != null ? context.getRolePermissions() : null;
   }
 }

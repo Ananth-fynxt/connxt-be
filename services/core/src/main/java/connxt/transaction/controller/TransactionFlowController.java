@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import connxt.permission.annotations.RequiresPermission;
-import connxt.permission.annotations.RequiresScope;
 import connxt.shared.builder.ResponseBuilder;
 import connxt.shared.builder.dto.ApiResponse;
 import connxt.transaction.dto.TransactionApprovalRequest;
@@ -27,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/transactions")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM", "FI", "BRAND", "EXTERNAL"})
 public class TransactionFlowController {
 
   private final TransactionFlowService transactionFlowService;
@@ -46,7 +43,6 @@ public class TransactionFlowController {
 
   /** Moves a transaction to a specific status */
   @PutMapping("/{txnId}/status")
-  @RequiresPermission(module = "transactions", action = "update")
   public ResponseEntity<ApiResponse<Object>> moveToStatus(
       @PathVariable("txnId") @NotNull String txnId,
       @RequestParam("status") @NotNull TransactionStatus status,
@@ -58,14 +54,12 @@ public class TransactionFlowController {
   }
 
   @GetMapping("/{txnId}")
-  @RequiresPermission(module = "transactions", action = "read")
   public ResponseEntity<ApiResponse<Object>> read(@PathVariable("txnId") @NotNull String txnId) {
     return responseBuilder.successResponse(
         transactionService.read(txnId), "Transaction retrieved successfully");
   }
 
   @PostMapping("/brand/{brandId}/environment/{environmentId}/search")
-  @RequiresPermission(module = "transactions", action = "read")
   public ResponseEntity<ApiResponse<Object>> searchTransactions(
       @PathVariable("brandId") @NotBlank String brandId,
       @PathVariable("environmentId") @NotBlank String environmentId,
@@ -84,7 +78,6 @@ public class TransactionFlowController {
   }
 
   @GetMapping("/customer/{customerId}/brand/{brandId}/environment/{environmentId}")
-  @RequiresPermission(module = "transactions", action = "read")
   public ResponseEntity<ApiResponse<Object>> readByCustomerIdAndBrandIdAndEnvironmentId(
       @PathVariable("customerId") @NotBlank String customerId,
       @PathVariable("brandId") @NotBlank String brandId,
@@ -100,7 +93,6 @@ public class TransactionFlowController {
   }
 
   @PostMapping("/{txnId}/approval")
-  @RequiresPermission(module = "transactions", action = "update")
   public ResponseEntity<ApiResponse<Object>> processApproval(
       @PathVariable("txnId") @NotNull String txnId,
       @Validated @RequestBody @NotNull TransactionApprovalRequest approvalRequest) {

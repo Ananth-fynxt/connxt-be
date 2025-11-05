@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import connxt.fi.dto.FiDto;
 import connxt.fi.service.FiService;
-import connxt.permission.annotations.RequiresScope;
 import connxt.shared.builder.ResponseBuilder;
 import connxt.shared.builder.dto.ApiResponse;
 
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/fi")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM"})
 public class FiController {
 
   private final FiService fiService;

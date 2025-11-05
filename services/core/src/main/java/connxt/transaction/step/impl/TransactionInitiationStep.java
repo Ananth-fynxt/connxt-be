@@ -37,16 +37,21 @@ public class TransactionInitiationStep extends AbstractTransactionStep {
 
   @Override
   protected TransactionExecutionContext doExecute(TransactionExecutionContext context) {
+    // Extract amount and currency from executePayload if available
+    Long amount = extractAmountFromPayload(context.getTransaction().getExecutePayload());
+    String currency = extractCurrencyFromPayload(context.getTransaction().getExecutePayload());
+    String walletId = extractWalletIdFromPayload(context.getTransaction().getExecutePayload());
+
     VmExecutionDto vmExecutionDto =
         VmExecutionDto.builder()
             .pspId(context.getTransaction().getPspId())
-            .amount(context.getTransaction().getTxnAmount().longValue())
-            .currency(context.getTransaction().getTxnCurrency())
+            .amount(amount)
+            .currency(currency)
             .brandId(context.getTransaction().getBrandId())
             .environmentId(context.getTransaction().getEnvironmentId())
             .step("initiate")
             .flowActionId(context.getTransaction().getFlowActionId())
-            .walletId(context.getTransaction().getWalletId())
+            .walletId(walletId)
             .transactionId(context.getTransaction().getId().getTxnId())
             .executePayload(convertJsonNodeToMap(context.getTransaction().getExecutePayload()))
             .build();
@@ -74,6 +79,45 @@ public class TransactionInitiationStep extends AbstractTransactionStep {
           new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Object>>() {});
     } catch (Exception e) {
       log.warn("Failed to convert JsonNode to Map, returning null", e);
+      return null;
+    }
+  }
+
+  private Long extractAmountFromPayload(com.fasterxml.jackson.databind.JsonNode payload) {
+    if (payload == null || !payload.has("order") || !payload.get("order").has("money")) {
+      return null;
+    }
+    try {
+      return payload.get("order").get("money").get("amount").asLong();
+    } catch (Exception e) {
+      log.warn("Failed to extract amount from payload", e);
+      return null;
+    }
+  }
+
+  private String extractCurrencyFromPayload(com.fasterxml.jackson.databind.JsonNode payload) {
+    if (payload == null || !payload.has("order") || !payload.get("order").has("money")) {
+      return null;
+    }
+    try {
+      return payload.get("order").get("money").get("currency").asText();
+    } catch (Exception e) {
+      log.warn("Failed to extract currency from payload", e);
+      return null;
+    }
+  }
+
+  private String extractWalletIdFromPayload(com.fasterxml.jackson.databind.JsonNode payload) {
+    if (payload == null) {
+      return null;
+    }
+    try {
+      if (payload.has("walletId")) {
+        return payload.get("walletId").asText();
+      }
+      return null;
+    } catch (Exception e) {
+      log.warn("Failed to extract walletId from payload", e);
       return null;
     }
   }

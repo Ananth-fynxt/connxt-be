@@ -29,11 +29,6 @@ hypersistence = "3.10.3"
 json-logic = "1.0.1"
 
 # =============================================================================
-# BACKGROUND JOB PROCESSING VERSIONS
-# =============================================================================
-jobrunr = "7.2.0"
-
-# =============================================================================
 # EMAIL SERVICE VERSIONS
 # =============================================================================
 azure-communication-services = "1.0.0"
@@ -84,7 +79,6 @@ jjwt-jackson = { group = "io.jsonwebtoken", name = "jjwt-jackson", version.ref =
 # =============================================================================
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
-hibernate-envers = { group = "org.hibernate.orm", name = "hibernate-envers" }
 
 # =============================================================================
 # DATABASE MIGRATION (Versions managed by version.ref)
@@ -108,11 +102,6 @@ mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstr
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 lombokMapstructBinding = { group = "org.projectlombok", name = "lombok-mapstruct-binding", version = "0.2.0" }
 hypersistence = { group = "io.hypersistence", name="hypersistence-utils-hibernate-63", version.ref = "hypersistence" }
-
-# =============================================================================
-# BACKGROUND JOB PROCESSING (Versions managed by version.ref)
-# =============================================================================
-jobrunr-spring-boot-starter = { group = "org.jobrunr", name = "jobrunr-spring-boot-3-starter", version.ref = "jobrunr" }
 
 # =============================================================================
 # EMAIL SERVICE DEPENDENCIES (Versions managed by version.ref)
@@ -166,11 +155,6 @@ development = ["lombok"]
 validation = ["json-schema-validator"]
 mapstruct = ["mapstruct", "mapstruct-processor"]
 hypersistence = ["hypersistence"]
-
-# =============================================================================
-# BACKGROUND JOB PROCESSING BUNDLES (Versions managed by version.ref)
-# =============================================================================
-jobrunr = ["jobrunr-spring-boot-starter"]
 
 # =============================================================================
 # CACHING BUNDLES (Versions managed by version.ref)

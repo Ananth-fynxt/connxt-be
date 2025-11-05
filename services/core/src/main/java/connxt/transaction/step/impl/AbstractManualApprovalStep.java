@@ -7,7 +7,6 @@ import org.springframework.util.CollectionUtils;
 
 import connxt.transaction.context.TransactionExecutionContext;
 import connxt.transaction.dto.ApprovalDecision;
-import connxt.transaction.entity.Transaction;
 import connxt.transaction.repository.TransactionRepository;
 import connxt.transaction.service.TransactionFlowConfigurationService;
 import connxt.transaction.service.mappers.TransactionMapper;
@@ -43,11 +42,13 @@ public abstract class AbstractManualApprovalStep extends AbstractTransactionStep
 
   @Override
   protected TransactionExecutionContext doExecute(TransactionExecutionContext context) {
-    Transaction transaction = context.getTransaction();
-    transaction.setBoApprovalDate(LocalDateTime.now());
+    // Approval status fields don't exist in schema - store approval info in customData instead
     String approvedBy = (String) context.getCustomData().get("approvedBy");
-    transaction.setBoApprovedBy(approvedBy);
-    transaction.setBoApprovalStatus(getApprovalStatus().toString());
+    context.getCustomData().put("approvalStatus", getApprovalStatus().toString());
+    context.getCustomData().put("approvalDate", LocalDateTime.now());
+    if (approvedBy != null) {
+      context.getCustomData().put("approvedBy", approvedBy);
+    }
     return context;
   }
 

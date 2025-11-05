@@ -94,14 +94,14 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-    // CORS configuration for SDK/Widget endpoints (open for browser access)
-    CorsConfiguration sdkConfiguration = new CorsConfiguration();
-    sdkConfiguration.addAllowedOriginPattern("*"); // Allow all origins for SDK
-    sdkConfiguration.setAllowedMethods(Arrays.asList(getAllowedCorsMethods()));
-    sdkConfiguration.addAllowedHeader("*");
-    sdkConfiguration.setAllowCredentials(false); // No credentials needed for SDK
+    // CORS configuration for public endpoints (CORS free - allow all origins)
+    CorsConfiguration publicConfiguration = new CorsConfiguration();
+    publicConfiguration.addAllowedOriginPattern("*"); // Allow all origins for public endpoints
+    publicConfiguration.setAllowedMethods(Arrays.asList(getAllowedCorsMethods()));
+    publicConfiguration.addAllowedHeader("*");
+    publicConfiguration.setAllowCredentials(false); // No credentials needed for public endpoints
 
-    // CORS configuration for secure internal APIs (restricted)
+    // CORS configuration for system-only endpoints (restricted to frontend URLs)
     CorsConfiguration secureConfiguration = new CorsConfiguration();
     List<String> allowedOrigins = Arrays.asList(frontendUrl.split(","));
     secureConfiguration.setAllowedOriginPatterns(allowedOrigins);
@@ -109,13 +109,13 @@ public class SecurityConfig {
     secureConfiguration.addAllowedHeader("*");
     secureConfiguration.setAllowCredentials(true);
 
-    // Apply SDK CORS to open-for-all-origins endpoints (from application-routes.yml)
-    String[] openForAllOriginsPaths = routeConfig.getOpenForAllOriginsPaths();
-    for (String path : openForAllOriginsPaths) {
-      source.registerCorsConfiguration(path, sdkConfiguration);
+    // Apply public CORS to public paths (CORS free)
+    String[] publicPaths = routeConfig.getPublicPaths();
+    for (String path : publicPaths) {
+      source.registerCorsConfiguration(path, publicConfiguration);
     }
 
-    // Apply secure CORS to all other endpoints
+    // Apply secure CORS to all other endpoints (system-only paths require JWT)
     source.registerCorsConfiguration("/**", secureConfiguration);
 
     return source;

@@ -49,25 +49,9 @@ public interface TransactionRepository
       Pageable pageable);
 
   @Query(
-      "SELECT t FROM Transaction t WHERE t.customerId = :customerId AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.id.version = (SELECT MAX(t2.id.version) FROM Transaction t2 WHERE t2.id.txnId = t.id.txnId) ORDER BY t.createdAt DESC")
-  List<Transaction> findByCustomerAndBrandAndEnvLatest(
-      @Param("customerId") String customerId,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId);
-
-  @Query(
       "SELECT t FROM Transaction t WHERE t.pspId = :pspId AND t.flowActionId = :flowActionId AND t.createdAt BETWEEN :startTime AND :endTime")
   List<Transaction> findByPspAndFlowAndTimeRange(
       @Param("pspId") String pspId,
-      @Param("flowActionId") String flowActionId,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.pspId = :pspId AND t.customerId = :customerId AND t.flowActionId = :flowActionId AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByPspCustomerFlow(
-      @Param("pspId") String pspId,
-      @Param("customerId") String customerId,
       @Param("flowActionId") String flowActionId,
       @Param("startTime") LocalDateTime startTime,
       @Param("endTime") LocalDateTime endTime);
@@ -86,100 +70,6 @@ public interface TransactionRepository
   long countByPspFlow(
       @Param("pspId") String pspId,
       @Param("flowActionId") String flowActionId,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.externalRequestId = :externalRequestId ORDER BY t.id.version DESC LIMIT 1")
-  Transaction findLatestByExternalRequestId(@Param("externalRequestId") String externalRequestId);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.pspId = :pspId AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByPspContext(
-      @Param("pspId") String pspId,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.customerId = :customerId AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByCustomerContext(
-      @Param("customerId") String customerId,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.pspId = :pspId AND t.customerId = :customerId AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByPspCustomerContext(
-      @Param("pspId") String pspId,
-      @Param("customerId") String customerId,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.customerTag = :customerTag AND t.customerAccountType = :customerAccountType AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByCustomerCriteria(
-      @Param("customerTag") String customerTag,
-      @Param("customerAccountType") String customerAccountType,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.customerTag = :customerTag AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByCustomerTag(
-      @Param("customerTag") String customerTag,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t FROM Transaction t WHERE t.customerAccountType = :customerAccountType AND t.brandId = :brandId AND t.environmentId = :environmentId AND t.flowActionId = :flowActionId AND t.txnCurrency = :txnCurrency AND t.createdAt BETWEEN :startTime AND :endTime")
-  List<Transaction> findByCustomerAccountType(
-      @Param("customerAccountType") String customerAccountType,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
-      @Param("startTime") LocalDateTime startTime,
-      @Param("endTime") LocalDateTime endTime);
-
-  @Query(
-      "SELECT t.pspId, "
-          + "       COALESCE(SUM(t.txnAmount), 0) as totalAmount, "
-          + "       COUNT(t) as transactionCount "
-          + "FROM Transaction t "
-          + "WHERE t.pspId IN :pspIds "
-          + "  AND t.brandId = :brandId "
-          + "  AND t.environmentId = :environmentId "
-          + "  AND t.flowActionId = :flowActionId "
-          + "  AND t.txnCurrency = :txnCurrency "
-          + "  AND t.status IN (connxt.transaction.dto.TransactionStatus.SUCCESS, connxt.transaction.dto.TransactionStatus.COMPLETED) "
-          + "  AND t.createdAt BETWEEN :startTime AND :endTime "
-          + "GROUP BY t.pspId")
-  List<Object[]> findRoutingCalculationData(
-      @Param("pspIds") List<String> pspIds,
-      @Param("brandId") String brandId,
-      @Param("environmentId") String environmentId,
-      @Param("flowActionId") String flowActionId,
-      @Param("txnCurrency") String txnCurrency,
       @Param("startTime") LocalDateTime startTime,
       @Param("endTime") LocalDateTime endTime);
 }

@@ -3,7 +3,6 @@ package connxt.psp.entity;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 
 import connxt.shared.constants.Status;
 import connxt.shared.db.AuditingEntity;
@@ -19,7 +18,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "maintenance_windows")
-@Audited
 public class MaintenanceWindow extends AuditingEntity {
 
   @Id @MaintenanceWindowId private String id;

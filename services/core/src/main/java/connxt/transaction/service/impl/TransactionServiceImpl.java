@@ -66,16 +66,14 @@ public class TransactionServiceImpl implements TransactionService {
   @Override
   public List<TransactionDto> readByCustomerIdAndBrandIdAndEnvironmentId(
       String customerId, String brandId, String environmentId) {
-    List<Transaction> transactions =
-        transactionRepository.findByCustomerAndBrandAndEnvLatest(
-            customerId, brandId, environmentId);
-    return transactions.stream().map(transactionMapper::toDto).toList();
+    // Customer filtering not supported - return empty list as customer fields don't exist in schema
+    return List.of();
   }
 
   @Override
   public double calculateFailureRate(
       String pspId, String flowActionId, LocalDateTime startTime, LocalDateTime endTime) {
-    return calculateFailureRateInternal(pspId, null, flowActionId, startTime, endTime);
+    return calculateFailureRateInternal(pspId, flowActionId, startTime, endTime);
   }
 
   @Override
@@ -85,22 +83,16 @@ public class TransactionServiceImpl implements TransactionService {
       String flowActionId,
       LocalDateTime startTime,
       LocalDateTime endTime) {
-    return calculateFailureRateInternal(pspId, customerId, flowActionId, startTime, endTime);
+    // Customer filtering not supported - use general failure rate calculation
+    return calculateFailureRateInternal(pspId, flowActionId, startTime, endTime);
   }
 
   private double calculateFailureRateInternal(
-      String pspId,
-      String customerId,
-      String flowActionId,
-      LocalDateTime startTime,
-      LocalDateTime endTime) {
+      String pspId, String flowActionId, LocalDateTime startTime, LocalDateTime endTime) {
     try {
       List<Transaction> recentTransactions =
-          customerId != null
-              ? transactionRepository.findByPspCustomerFlow(
-                  pspId, customerId, flowActionId, startTime, endTime)
-              : transactionRepository.findByPspAndFlowAndTimeRange(
-                  pspId, flowActionId, startTime, endTime);
+          transactionRepository.findByPspAndFlowAndTimeRange(
+              pspId, flowActionId, startTime, endTime);
 
       if (recentTransactions.isEmpty()) {
         return 0.0;

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import connxt.brand.dto.BrandDto;
 import connxt.brand.service.BrandService;
-import connxt.permission.annotations.RequiresScope;
 import connxt.shared.builder.ResponseBuilder;
 import connxt.shared.builder.dto.ApiResponse;
 
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/brands")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM", "FI", "BRAND"})
 public class BrandController {
 
   private final BrandService brandService;

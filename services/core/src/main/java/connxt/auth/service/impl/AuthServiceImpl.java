@@ -85,7 +85,6 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-
   @Override
   @Transactional
   public AuthResponse refreshToken(String refreshToken) {
@@ -183,7 +182,6 @@ public class AuthServiceImpl implements AuthService {
     claims.put("scope", user.getScope().getValue());
     return claims;
   }
-
 
   private JwtTokenResponse generateAccessTokenFromRefreshToken(
       String authType, JwtValidationResponse validationResult) {

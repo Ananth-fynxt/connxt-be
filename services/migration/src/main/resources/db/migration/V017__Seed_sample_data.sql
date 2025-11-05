@@ -32,75 +32,6 @@ INSERT INTO environments (id, name, secret, token, origin, success_redirect_url,
 ('env_uat_003', 'Connxt UAT Environment', 'sec_connxt_uat_1235', 'tok_connxt_uat_4568', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_003', NOW(), NOW(), 'system', 'system'),
 ('env_uat_004', 'Connxt UAT Environment', 'sec_connxt_uat_1236', 'tok_connxt_uat_4569', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_004', NOW(), NOW(), 'system', 'system');
 
-INSERT INTO brand_roles (id, brand_id, environment_id, name, permission, created_at, updated_at, created_by, updated_by) VALUES
-('role_admin_001', 'brn_001', 'env_uat_001', 'admin', '{
-  "brands": {"actions": ["create", "read", "update", "delete"]},
-  "brand_users": {"actions": ["create", "read", "update", "delete"]},
-  "brand_roles": {"actions": ["create", "read", "update", "delete"]},
-  "customers": {"actions": ["create", "read", "update"]},
-  "transactions": {"actions": ["read", "update"]},
-  "psps": {"actions": ["create", "read", "update"]},
-  "psp_groups": {"actions": ["create", "read", "update", "delete"]},
-  "routing_rules": {"actions": ["create", "read", "update", "delete"]},
-  "conversion_rates": {"actions": ["create", "read", "update", "delete"]},
-  "risk_rules": {"actions": ["create", "read", "update", "delete"]},
-  "fees": {"actions": ["create", "read", "update", "delete"]},
-  "webhooks": {"actions": ["create", "read", "update", "delete"]},
-  "webhook_logs": {"actions": ["read"]},
-  "auto_approvals": {"actions": ["create", "read", "update", "delete"]},
-  "transaction_limits": {"actions": ["create", "read", "update", "delete"]},
-  "reports": {"actions": ["read"]},
-  "analytics": {"actions": ["read"]},
-  "audit_logs": {"actions": ["read"]}
-}', NOW(), NOW(), 'system', 'system'),
-('role_manager_001', 'brn_001', 'env_uat_001', 'manager', '{
-  "brands": {"actions": ["read"]},
-  "brand_users": {"actions": ["create", "read", "update"]},
-  "brand_roles": {"actions": ["read"]},
-  "customers": {"actions": ["create", "read", "update"]},
-  "transactions": {"actions": ["read", "update"]},
-  "psps": {"actions": ["read", "update"]},
-  "psp_groups": {"actions": ["create", "read", "update"]},
-  "routing_rules": {"actions": ["create", "read", "update"]},
-  "conversion_rates": {"actions": ["read", "update"]},
-  "risk_rules": {"actions": ["read", "update"]},
-  "fees": {"actions": ["read", "update"]},
-  "webhooks": {"actions": ["read", "update"]},
-  "webhook_logs": {"actions": ["read"]},
-  "auto_approvals": {"actions": ["read", "update"]},
-  "transaction_limits": {"actions": ["read", "update"]},
-  "reports": {"actions": ["read"]},
-  "analytics": {"actions": ["read"]},
-  "audit_logs": {"actions": ["read"]}
-}', NOW(), NOW(), 'system', 'system'),
-('role_agent_001', 'brn_001', 'env_uat_001', 'agent', '{
-  "brands": {"actions": ["read"]},
-  "brand_users": {"actions": ["read"]},
-  "brand_roles": {"actions": ["read"]},
-  "customers": {"actions": ["create", "read", "update"]},
-  "transactions": {"actions": ["read"]},
-  "psps": {"actions": ["read"]},
-  "psp_groups": {"actions": ["read"]},
-  "routing_rules": {"actions": ["read"]},
-  "conversion_rates": {"actions": ["read"]},
-  "risk_rules": {"actions": ["read"]},
-  "fees": {"actions": ["read"]},
-  "webhooks": {"actions": ["read"]},
-  "webhook_logs": {"actions": ["read"]},
-  "auto_approvals": {"actions": ["read"]},
-  "transaction_limits": {"actions": ["read"]},
-  "reports": {"actions": ["read"]},
-  "analytics": {"actions": ["read"]},
-  "audit_logs": {"actions": ["read"]}
-}', NOW(), NOW(), 'system', 'system');
-
-INSERT INTO brand_users (id, brand_id, environment_id, brand_role_id, name, email, user_id, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('user_admin_001', 'brn_001', 'env_uat_001', 'role_admin_001', 'John Admin', 'john.admin@connxt.com', 'usr_brand_001', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('user_manager_001', 'brn_001', 'env_uat_001', 'role_manager_001', 'Jane Manager', 'jane.manager@connxt.com', 'usr_brand_002', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('user_agent_001', 'brn_001', 'env_uat_001', 'role_agent_001', 'Bob Agent', 'bob.agent@connxt.com', 'usr_brand_003', 'BRAND', 'ACTIVE', NOW(), NOW(), 'system', 'system');
-
-INSERT INTO brand_customer (id, brand_id, environment_id, name, email, tag, account_type, country, currencies, customer_meta, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('cust_001', 'brn_001', 'env_uat_001', 'Premium Customer A', 'customer.a@example.com', 'premium', 'individual', 'US', ARRAY['USD', 'EUR'], '{"tier": "gold", "kyc_status": "verified"}', 'EXTERNAL', 'ACTIVE', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO flow_types (id, name, created_at, updated_at, created_by, updated_by) VALUES
 ('ftp_psp_001', 'PSP', NOW(), NOW(), 'system', 'system');
@@ -958,14 +889,11 @@ export const webhook = async (ctx, sdk) => {
 };
 ', NOW(), NOW(), 'system', 'system');
 
-INSERT INTO wallet (id, brand_id, environment_id, brand_customer_id, name, currency, balance, available_balance, hold_balance, created_at, updated_at, created_by, updated_by) VALUES
-('wallet_001', 'brn_001', 'env_uat_001', 'cust_001', 'USD Wallet', 'USD', 10000.00, 9500.00, 500.00, NOW(), NOW(), 'system', 'system');
-
-INSERT INTO psps (id, name, description, logo, credential, timeout, block_vpn_access, block_data_center_access, failure_rate, failure_rate_threshold, failure_rate_duration_minutes, ip_address, brand_id, environment_id, flow_target_id, status, created_at, updated_at, created_by, updated_by) VALUES
-('psp_001', 'Enovipay UAT', 'Enovipay payment gateway for UAT', 'https://logos.s3.amazonaws.com/enovipay.png', '{"brandId": "dhfAB36xGnSRiMQWUJVgnFdeTMkwpdABZYJV32DTKwVTjmAFThe/9fAxXGsMTHPkebsgJcv7O+BXFjgC9oNCaQ==", "token": "f8PJRtNYn8YnIM8ijbR8jqIuL9MvXAlRoX7pnaRmg1cGlAiA/oJgunvorpeVw4osYgNYrCrQy2YxNNQ/SQEHQYLxjccfUXbsG1tnBAaGl1Al3C8d5rcOa/xMeFOpYtOzCcF6iWIk/Ni/U/x8tREL5n86nxY="}', 300, false, false, false, 0, 60, ARRAY['54.187.174.169', '54.187.205.235'], 'brn_001', 'env_uat_001', 'ftg_enovipay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('psp_002', 'SticPay UAT', 'SticPay payment gateway for UAT', 'https://logos.s3.amazonaws.com/sticpay.png', '{"merchantEmail": "OBk2z6xg57zYcfu/SgHR5izad6/U73dkdurHeg2Qzx2MOqdBiIJYtMGDj4iYCsRwOjjRExBR5NY=", "apiKey": "8+d2MKs+ldE/V1CJ2f6bbJfDA4mXzDJKDLzjkXyuGujF9zM3xuFci7LRt3lRhjG2xB4Rjyczpmt7uqx5c3JeqTMQW8tr3bspIAiYPzD/yo8pg6qbQ5GfrREONPc="}', 300, false, false, false, 0, 60, ARRAY['192.168.1.100', '192.168.1.101'], 'brn_001', 'env_uat_001', 'ftg_sticpay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('psp_003', 'Korapay UAT', 'Korapay payment gateway for UAT', 'https://logos.s3.amazonaws.com/korapay.png', '{"publicKey": "o0JkcMBlzGkFSSxnHaYec4+FHGQeIPc8zoMegIlWdQxo+6hnwwC2/pn/mfeem4Ne9bayisnzM5NeroXBrPl7x2RmfmmomTej1Px7wQ==", "secretKey": "65Nxau6lUiphbJvwrAWihGmbCtTX/5WREvtJ7zu/um3C9RIONVCf9rQlsAjnzWv6qPbGZTlAq7EsvZ52Cv8epcNbJOTs+VDajnQywQ==", "encryptionKey": "d/aOCKhymtBRHiiSaDge2XTNJGv9caXNPgKTh1cHHM1Q+eLzzF4/9RYzXYMRu3LA5Ya7Q/FaCQzVIPFW"}', 300, false, false, false, 0, 60, ARRAY['52.31.139.75', '52.49.173.169'], 'brn_001', 'env_uat_001', 'ftg_korapay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('psp_004', 'BridgerPay UAT', 'BridgerPay payment gateway for UAT', 'https://logos.s3.amazonaws.com/bridgerpay.png', '{"username": "dhfAB36xGnSRiMQWUJVgnFdeTMkwpdABZYJV32DTKwVTjmAFThe/9fAxXGsMTHPkebsgJcv7O+BXFjgC9oNCaQ==", "password": "f8PJRtNYn8YnIM8ijbR8jqIuL9MvXAlRoX7pnaRmg1cGlAiA/oJgunvorpeVw4osYgNYrCrQy2YxNNQ/SQEHQYLxjccfUXbsG1tnBAaGl1Al3C8d5rcOa/xMeFOpYtOzCcF6iWIk/Ni/U/x8tREL5n86nxY=", "apiKey": "OBk2z6xg57zYcfu/SgHR5izad6/U73dkdurHeg2Qzx2MOqdBiIJYtMGDj4iYCsRwOjjRExBR5NY=", "cashierKey": "8+d2MKs+ldE/V1CJ2f6bbJfDA4mXzDJKDLzjkXyuGujF9zM3xuFci7LRt3lRhjG2xB4Rjyczpmt7uqx5c3JeqTMQW8tr3bspIAiYPzD/yo8pg6qbQ5GfrREONPc="}', 300, false, false, false, 0, 60, ARRAY['52.31.139.75', '52.49.173.169'], 'brn_001', 'env_uat_001', 'ftg_bridgerpay_001', 'ENABLED', NOW(), NOW(), 'system', 'system');
+INSERT INTO psps (id, name, description, logo, credential, brand_id, environment_id, flow_target_id, status, created_at, updated_at, created_by, updated_by) VALUES
+('psp_001', 'Enovipay UAT', 'Enovipay payment gateway for UAT', 'https://logos.s3.amazonaws.com/enovipay.png', '{"brandId": "dhfAB36xGnSRiMQWUJVgnFdeTMkwpdABZYJV32DTKwVTjmAFThe/9fAxXGsMTHPkebsgJcv7O+BXFjgC9oNCaQ==", "token": "f8PJRtNYn8YnIM8ijbR8jqIuL9MvXAlRoX7pnaRmg1cGlAiA/oJgunvorpeVw4osYgNYrCrQy2YxNNQ/SQEHQYLxjccfUXbsG1tnBAaGl1Al3C8d5rcOa/xMeFOpYtOzCcF6iWIk/Ni/U/x8tREL5n86nxY="}', 'brn_001', 'env_uat_001', 'ftg_enovipay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
+('psp_002', 'SticPay UAT', 'SticPay payment gateway for UAT', 'https://logos.s3.amazonaws.com/sticpay.png', '{"merchantEmail": "OBk2z6xg57zYcfu/SgHR5izad6/U73dkdurHeg2Qzx2MOqdBiIJYtMGDj4iYCsRwOjjRExBR5NY=", "apiKey": "8+d2MKs+ldE/V1CJ2f6bbJfDA4mXzDJKDLzjkXyuGujF9zM3xuFci7LRt3lRhjG2xB4Rjyczpmt7uqx5c3JeqTMQW8tr3bspIAiYPzD/yo8pg6qbQ5GfrREONPc="}', 'brn_001', 'env_uat_001', 'ftg_sticpay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
+('psp_003', 'Korapay UAT', 'Korapay payment gateway for UAT', 'https://logos.s3.amazonaws.com/korapay.png', '{"publicKey": "o0JkcMBlzGkFSSxnHaYec4+FHGQeIPc8zoMegIlWdQxo+6hnwwC2/pn/mfeem4Ne9bayisnzM5NeroXBrPl7x2RmfmmomTej1Px7wQ==", "secretKey": "65Nxau6lUiphbJvwrAWihGmbCtTX/5WREvtJ7zu/um3C9RIONVCf9rQlsAjnzWv6qPbGZTlAq7EsvZ52Cv8epcNbJOTs+VDajnQywQ==", "encryptionKey": "d/aOCKhymtBRHiiSaDge2XTNJGv9caXNPgKTh1cHHM1Q+eLzzF4/9RYzXYMRu3LA5Ya7Q/FaCQzVIPFW"}', 'brn_001', 'env_uat_001', 'ftg_korapay_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
+('psp_004', 'BridgerPay UAT', 'BridgerPay payment gateway for UAT', 'https://logos.s3.amazonaws.com/bridgerpay.png', '{"username": "dhfAB36xGnSRiMQWUJVgnFdeTMkwpdABZYJV32DTKwVTjmAFThe/9fAxXGsMTHPkebsgJcv7O+BXFjgC9oNCaQ==", "password": "f8PJRtNYn8YnIM8ijbR8jqIuL9MvXAlRoX7pnaRmg1cGlAiA/oJgunvorpeVw4osYgNYrCrQy2YxNNQ/SQEHQYLxjccfUXbsG1tnBAaGl1Al3C8d5rcOa/xMeFOpYtOzCcF6iWIk/Ni/U/x8tREL5n86nxY=", "apiKey": "OBk2z6xg57zYcfu/SgHR5izad6/U73dkdurHeg2Qzx2MOqdBiIJYtMGDj4iYCsRwOjjRExBR5NY=", "cashierKey": "8+d2MKs+ldE/V1CJ2f6bbJfDA4mXzDJKDLzjkXyuGujF9zM3xuFci7LRt3lRhjG2xB4Rjyczpmt7uqx5c3JeqTMQW8tr3bspIAiYPzD/yo8pg6qbQ5GfrREONPc="}', 'brn_001', 'env_uat_001', 'ftg_bridgerpay_001', 'ENABLED', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO psp_operations (psp_id, flow_action_id, flow_definition_id, currencies, countries, status) VALUES
 ('psp_001', 'fat_deposit_001', 'fld_deposit_enovipay_001', ARRAY['USD'], ARRAY['US', 'CA', 'GB'], 'ENABLED'),
@@ -973,27 +901,6 @@ INSERT INTO psp_operations (psp_id, flow_action_id, flow_definition_id, currenci
 ('psp_002', 'fat_deposit_001', 'fld_deposit_sticpay_001', ARRAY['USD'], ARRAY['US', 'CA', 'GB', 'EU'], 'ENABLED'),
 ('psp_002', 'fat_withdraw_001', 'fld_withdraw_sticpay_001', ARRAY['USD'], ARRAY['US', 'CA', 'GB', 'EU'], 'ENABLED');
 
-INSERT INTO fixer_api_currency_pairs (id, source_currency, target_currency) VALUES
-(1, 'USD', ARRAY['EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'INR']),
-(2, 'EUR', ARRAY['USD', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'INR']),
-(3, 'GBP', ARRAY['USD', 'EUR', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'INR']),
-(4, 'JPY', ARRAY['USD', 'EUR', 'GBP', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'INR']),
-(5, 'INR', ARRAY['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD']);
-
-INSERT INTO conversion_rate_raw_data (id, version, source_currency, target_currency, time_range, amount, created_at, updated_at, created_by, updated_by) VALUES
-('conv_raw_001', 1, 'USD', 'EUR', NOW(), 1000.00, NOW(), NOW(), 'system', 'system'),
-('conv_raw_002', 1, 'EUR', 'USD', NOW(), 850.00, NOW(), NOW(), 'system', 'system'),
-('conv_raw_003', 1, 'USD', 'GBP', NOW(), 800.00, NOW(), NOW(), 'system', 'system');
-
-INSERT INTO conversion_rate (id, version, brand_id, environment_id, status, source_currency, target_currency, value, created_at, updated_at, created_by, updated_by) VALUES
-('conv_001', 1, 'brn_001', 'env_uat_001', 'ENABLED', 'USD', 'EUR', 0.85, NOW(), NOW(), 'system', 'system'),
-('conv_002', 1, 'brn_001', 'env_uat_001', 'ENABLED', 'EUR', 'USD', 1.18, NOW(), NOW(), 'system', 'system'),
-('conv_003', 1, 'brn_001', 'env_uat_001', 'ENABLED', 'USD', 'GBP', 0.80, NOW(), NOW(), 'system', 'system');
-
-INSERT INTO webhooks (id, status_type, url, retry, brand_id, environment_id, status, created_at, updated_at, created_by, updated_by) VALUES
-('webhook_001', 'SUCCESS', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('webhook_002', 'FAILURE', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system'),
-('webhook_003', 'NOTIFICATION', 'https://api.connxt.fynxt.io/api/v1/health', 3, 'brn_001', 'env_uat_001', 'ENABLED', NOW(), NOW(), 'system', 'system');
 
 UPDATE flow_definitions SET flow_configuration = '{
    "FAILED": [],
@@ -1003,9 +910,7 @@ UPDATE flow_definitions SET flow_configuration = '{
    "CREATED": [
      "INITIATED"
    ],
-   "SUCCESS": [
-     "CREDITED_TO_WALLET"
-   ],
+   "SUCCESS": [],
    "APPROVED": [
      "SUCCESS"
    ],
@@ -1026,17 +931,12 @@ UPDATE flow_definitions SET flow_configuration = '{
      "PG_SUCCESS",
      "PG_FAILED"
    ],
-   "AUTO_APPROVED": [
-     "SUCCESS"
-   ],
-   "CREDITED_TO_WALLET": [],
    "PENDING_FOR_APPROVAL": [
-     "AUTO_APPROVED",
      "REJECTED",
      "APPROVED"
    ]
  }' WHERE id = 'fld_deposit_enovipay_001';
- UPDATE flow_definitions SET flow_configuration = '{
+UPDATE flow_definitions SET flow_configuration = '{
    "FAILED": [],
    "NEW": [
      "CREATED"
@@ -1044,9 +944,7 @@ UPDATE flow_definitions SET flow_configuration = '{
    "CREATED": [
      "INITIATED"
    ],
-   "SUCCESS": [
-     "CREDITED_TO_WALLET"
-   ],
+   "SUCCESS": [],
    "APPROVED": [
      "SUCCESS"
    ],
@@ -1067,20 +965,15 @@ UPDATE flow_definitions SET flow_configuration = '{
      "PG_SUCCESS",
      "PG_FAILED"
    ],
-   "AUTO_APPROVED": [
-     "SUCCESS"
-   ],
-   "CREDITED_TO_WALLET": [],
    "PENDING_FOR_APPROVAL": [
-     "AUTO_APPROVED",
      "REJECTED",
      "APPROVED"
    ]
  }' WHERE id = 'fld_deposit_sticpay_001';
 
-UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["HOLD_BALANCE"],"HOLD_BALANCE":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_enovipay_001';
+UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_enovipay_001';
 
-UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["HOLD_BALANCE"],"HOLD_BALANCE":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_sticpay_001';
+UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_sticpay_001';
 
 INSERT INTO flow_definitions (id, flow_action_id, flow_target_id, description, code, created_at, updated_at, created_by, updated_by) VALUES
 ('fld_deposit_korapay_001', 'fat_deposit_001', 'ftg_korapay_001', 'SYS-PSP-DEPOSIT-KORAPAY', 'export const initiate = async (ctx, sdk) => {
@@ -1410,9 +1303,7 @@ UPDATE flow_definitions SET flow_configuration = '{
    "CREATED": [
      "INITIATED"
    ],
-   "SUCCESS": [
-     "CREDITED_TO_WALLET"
-   ],
+   "SUCCESS": [],
    "APPROVED": [
      "SUCCESS"
    ],
@@ -1433,18 +1324,13 @@ UPDATE flow_definitions SET flow_configuration = '{
      "PG_SUCCESS",
      "PG_FAILED"
    ],
-   "AUTO_APPROVED": [
-     "SUCCESS"
-   ],
-   "CREDITED_TO_WALLET": [],
    "PENDING_FOR_APPROVAL": [
-     "AUTO_APPROVED",
      "REJECTED",
      "APPROVED"
    ]
  }' WHERE id = 'fld_deposit_korapay_001';
 
-UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["HOLD_BALANCE"],"HOLD_BALANCE":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_korapay_001';
+UPDATE flow_definitions SET flow_configuration = '{"NEW":["CREATED"],"CREATED":["PENDING_FOR_APPROVAL"],"PENDING_FOR_APPROVAL":["REJECTED","APPROVED"],"SUCCESS":[],"APPROVED":["INITIATED"],"INITIATED":["SUCCESS"]}' WHERE id = 'fld_withdraw_korapay_001';
 
 UPDATE flow_definitions SET flow_configuration = '{
    "FAILED": [],
@@ -1454,9 +1340,7 @@ UPDATE flow_definitions SET flow_configuration = '{
    "CREATED": [
      "INITIATED"
    ],
-   "SUCCESS": [
-     "CREDITED_TO_WALLET"
-   ],
+   "SUCCESS": [],
    "APPROVED": [
      "SUCCESS"
    ],
@@ -1477,12 +1361,7 @@ UPDATE flow_definitions SET flow_configuration = '{
      "PG_SUCCESS",
      "PG_FAILED"
    ],
-   "AUTO_APPROVED": [
-     "SUCCESS"
-   ],
-   "CREDITED_TO_WALLET": [],
    "PENDING_FOR_APPROVAL": [
-     "AUTO_APPROVED",
      "REJECTED",
      "APPROVED"
    ]

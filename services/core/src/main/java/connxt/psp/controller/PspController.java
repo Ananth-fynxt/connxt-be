@@ -4,8 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import connxt.permission.annotations.RequiresPermission;
-import connxt.permission.annotations.RequiresScope;
 import connxt.psp.dto.PspDto;
 import connxt.psp.dto.UpdatePspDto;
 import connxt.psp.service.PspService;
@@ -19,27 +17,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/psps")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM", "FI", "BRAND"})
 public class PspController {
 
   private final PspService pspService;
   private final ResponseBuilder responseBuilder;
 
   @PostMapping
-  @RequiresPermission(module = "psps", action = "create")
   public ResponseEntity<ApiResponse<Object>> create(@Validated @RequestBody PspDto pspDto) {
     return responseBuilder.successResponse(pspService.create(pspDto));
   }
 
   @GetMapping("/{pspId}")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>> getById(
       @Validated @PathVariable @NotBlank String pspId) {
     return responseBuilder.successResponse(pspService.getById(pspId));
   }
 
   @GetMapping("/brand/{brandId}/environment/{environmentId}")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>> getByBrandAndEnvironment(
       @Validated @PathVariable @NotBlank String brandId,
       @Validated @PathVariable @NotBlank String environmentId) {
@@ -48,7 +42,6 @@ public class PspController {
   }
 
   @GetMapping("/brand/{brandId}/environment/{environmentId}/{flowActionId}/{status}/{currency}")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>>
       getByBrandAndEnvironmentByStatusAndCurrencyAndFlowAction(
           @Validated @PathVariable @NotBlank String brandId,
@@ -62,7 +55,6 @@ public class PspController {
   }
 
   @GetMapping("/brand/{brandId}/environment/{environmentId}/{flowActionId}/{status}")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>> getByBrandAndEnvironmentByStatusAndFlowAction(
       @Validated @PathVariable @NotBlank String brandId,
       @Validated @PathVariable @NotBlank String environmentId,
@@ -74,7 +66,6 @@ public class PspController {
   }
 
   @GetMapping("/brand/{brandId}/environment/{environmentId}/currencies")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>> getSupportedCurrenciesByBrandAndEnvironment(
       @Validated @PathVariable @NotBlank String brandId,
       @Validated @PathVariable @NotBlank String environmentId) {
@@ -83,7 +74,6 @@ public class PspController {
   }
 
   @GetMapping("/brand/{brandId}/environment/{environmentId}/countries")
-  @RequiresPermission(module = "psps", action = "read")
   public ResponseEntity<ApiResponse<Object>> getSupportedCountriesByBrandAndEnvironment(
       @Validated @PathVariable @NotBlank String brandId,
       @Validated @PathVariable @NotBlank String environmentId) {
@@ -92,7 +82,6 @@ public class PspController {
   }
 
   @PutMapping("/{pspId}")
-  @RequiresPermission(module = "psps", action = "update")
   public ResponseEntity<ApiResponse<Object>> update(
       @Validated @PathVariable @NotBlank String pspId,
       @Validated @RequestBody UpdatePspDto pspDto) {
@@ -100,7 +89,6 @@ public class PspController {
   }
 
   @PutMapping("/{pspId}/{status}")
-  @RequiresPermission(module = "psps", action = "update")
   public ResponseEntity<ApiResponse<Object>> updateStatus(
       @Validated @PathVariable @NotBlank String pspId,
       @Validated @PathVariable @NotBlank String status) {

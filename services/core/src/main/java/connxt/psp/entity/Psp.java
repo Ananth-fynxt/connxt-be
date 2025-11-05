@@ -2,7 +2,6 @@ package connxt.psp.entity;
 
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 import org.hibernate.type.SqlTypes;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +25,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "psps")
-@Audited
 @EqualsAndHashCode(callSuper = true)
 public class Psp extends AuditingEntity {
   @Id @PspId private String id;

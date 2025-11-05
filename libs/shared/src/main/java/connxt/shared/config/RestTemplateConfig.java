@@ -1,11 +1,10 @@
 package connxt.shared.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-
-import connxt.shared.config.properties.WebhookProperties;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,18 +12,24 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class RestTemplateConfig {
 
+  @Value("${http.client.connection-timeout-ms:10000}")
+  private long connectionTimeoutMs;
+
+  @Value("${http.client.read-timeout-ms:30000}")
+  private long readTimeoutMs;
+
   @Bean
-  public RestTemplate restTemplate(WebhookProperties properties) {
+  public RestTemplate restTemplate() {
     SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-    factory.setConnectTimeout((int) properties.getConnectionTimeoutMs());
-    factory.setReadTimeout((int) properties.getReadTimeoutMs());
+    factory.setConnectTimeout((int) connectionTimeoutMs);
+    factory.setReadTimeout((int) readTimeoutMs);
 
     RestTemplate restTemplate = new RestTemplate(factory);
 
     log.info(
-        "Configured webhook RestTemplate with connection timeout: {}ms, read timeout: {}ms",
-        properties.getConnectionTimeoutMs(),
-        properties.getReadTimeoutMs());
+        "Configured RestTemplate with connection timeout: {}ms, read timeout: {}ms",
+        connectionTimeoutMs,
+        readTimeoutMs);
 
     return restTemplate;
   }

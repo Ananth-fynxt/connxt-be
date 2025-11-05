@@ -86,7 +86,7 @@ public class ExternalController {
     return processInboundRequest(requestBody, queryParams, token, tnxId, step);
   }
 
-  @PostMapping("/inbound/w/{step}/{token}") // set the webhook URL in the PSP dashboard
+  @PostMapping("/inbound/w/{step}/{token}")
   public ResponseEntity<ApiResponse<Object>> handleWritePostNoTnxId(
       HttpServletRequest request,
       @RequestParam(required = false) Map<String, Object> queryParams,

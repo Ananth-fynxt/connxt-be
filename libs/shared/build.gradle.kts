@@ -16,7 +16,6 @@ dependencies {
     // Database
     api(libs.postgresql)
     api(libs.hikaricp)
-    api(libs.hibernate.envers)
     
     // JSON Schema Validation
     api(libs.json.schema.validator)
@@ -33,9 +32,6 @@ dependencies {
     
     // Swagger/OpenAPI Documentation
     api(libs.spring.doc.openapi.starter.webmvc.ui)
-    
-    // Background Job Processing
-    api(libs.jobrunr.spring.boot.starter)
     
     // Email Service
     api(libs.azure.communication.services.email)

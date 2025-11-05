@@ -32,14 +32,11 @@ public class TransactionQueryBuilder {
     mapping.put("txnTime", "createdAt");
     mapping.put("txnStatus", "status");
     mapping.put("psp", "pspId");
-    mapping.put("customer", "customerId");
     mapping.put("flowAction", "flowActionId");
-    mapping.put("amount", "amount");
-    mapping.put("currency", "currency");
     mapping.put("status", "status");
-    mapping.put("customerId", "customerId");
     mapping.put("flowActionId", "flowActionId");
     mapping.put("txnType", "transactionType");
+    // Removed mappings: customer, customerId, amount, currency (fields don't exist in schema)
     return Map.copyOf(mapping);
   }
 
@@ -113,7 +110,8 @@ public class TransactionQueryBuilder {
   private Object processFilterValue(String fieldName, Object value) {
     return switch (fieldName) {
       case "status" -> extractStatus(value);
-      case "customerId", "pspId", "flowActionId", "currency" -> extractString(value);
+      case "pspId", "flowActionId" -> extractString(value);
+        // Removed: customerId, currency (fields don't exist in schema)
       default -> value;
     };
   }

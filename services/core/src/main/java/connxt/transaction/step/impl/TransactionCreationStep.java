@@ -4,11 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.networknt.schema.utils.StringUtils;
-
 import connxt.psp.service.PspService;
 import connxt.shared.constants.ErrorCode;
-import connxt.shared.exception.ErrorCategory;
 import connxt.shared.exception.TransactionException;
 import connxt.transaction.context.TransactionExecutionContext;
 import connxt.transaction.dto.TransactionStatus;
@@ -68,44 +65,14 @@ public class TransactionCreationStep extends AbstractTransactionStep {
 
   private void performIdempotencyCheck(TransactionExecutionContext context) {
     Transaction transaction = context.getTransaction();
-    validateExternalRequestIdPresence(transaction);
-    validateDuplicateTransaction(transaction);
-  }
-
-  private void validateExternalRequestIdPresence(Transaction transaction) {
     if (null == transaction) {
       logger.error("Transaction is null in context");
       throw new TransactionException(
           "Transaction is null in execution context",
           ErrorCode.TRANSACTION_INVALID_TRANSITION_STATUS);
     }
-
-    if (StringUtils.isBlank(transaction.getExternalRequestId())) {
-      throw new TransactionException(
-          "Transaction external request Id is required",
-          ErrorCode.TRANSACTION_REQUEST_ID_NOT_FOUND);
-    }
-  }
-
-  private void validateDuplicateTransaction(Transaction transaction) {
-    Transaction existingTransaction =
-        transactionRepository.findLatestByExternalRequestId(transaction.getExternalRequestId());
-
-    if (null == existingTransaction) {
-      return;
-    }
-
-    logger.warn(
-        "Duplicate transaction detected: Found existing transaction {} for external request ID {}.",
-        existingTransaction.getId() != null ? existingTransaction.getId().getTxnId() : "NULL",
-        transaction.getExternalRequestId());
-
-    throw new TransactionException(
-        String.format(
-            "Transaction with external request ID '%s' already exists. Existing transaction ID: %s",
-            transaction.getExternalRequestId(), existingTransaction.getId().getTxnId()),
-        ErrorCode.TRANSACTION_DUPLICATE,
-        ErrorCategory.DUPLICATE);
+    // External request ID validation removed as field doesn't exist in schema
+    // Duplicate transaction check based on txnId handled by repository constraints
   }
 
   @Override

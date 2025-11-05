@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import connxt.permission.annotations.RequiresScope;
 import connxt.shared.builder.ResponseBuilder;
 import connxt.shared.builder.dto.ApiResponse;
 import connxt.systemuser.dto.SystemUserDto;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/system-users")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM"})
 public class SystemUserController {
 
   private final SystemUserService systemUserService;

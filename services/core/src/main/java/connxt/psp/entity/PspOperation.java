@@ -3,7 +3,6 @@ package connxt.psp.entity;
 import java.util.List;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 
 import connxt.shared.constants.Status;
 import connxt.shared.db.PostgreSQLEnumType;
@@ -21,7 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "psp_operations")
 @IdClass(PspOperationId.class)
-@Audited
 public class PspOperation {
 
   //  @Id

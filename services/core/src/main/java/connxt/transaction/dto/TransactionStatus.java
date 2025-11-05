@@ -3,7 +3,6 @@ package connxt.transaction.dto;
 public enum TransactionStatus {
   NEW,
   CREATED,
-  HOLD_BALANCE,
   INITIATED,
   PG_ACCEPTED,
   PG_REJECTED,
@@ -13,11 +12,8 @@ public enum TransactionStatus {
   PG_FAILED,
   PENDING_FOR_APPROVAL,
   APPROVED,
-  AUTO_APPROVED,
   SUCCESS,
   FAILED,
   COMPLETED,
-  CREDITED_TO_WALLET,
-  CLEAR_HELD_BALANCE,
   CANCELLED
 }

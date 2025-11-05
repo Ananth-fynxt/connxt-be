@@ -16,10 +16,7 @@ import lombok.Data;
 public class RouteConfig {
 
   private List<String> publicPaths;
-  private List<String> brandEnvPaths;
-  private List<String> noBrandEnvPaths;
   private List<String> systemOnlyPaths;
-  private List<String> openForAllOrigins;
   private final PathPatternParser parser = new PathPatternParser();
 
   public boolean isPublic(String requestUri) {
@@ -30,24 +27,12 @@ public class RouteConfig {
     return !isPublic(requestUri);
   }
 
-  public boolean requiresBrandEnvHeaders(String requestUri) {
-    return matchesAny(requestUri, brandEnvPaths);
-  }
-
-  public boolean isNoBrandEnvRoute(String requestUri) {
-    return matchesAny(requestUri, noBrandEnvPaths);
-  }
-
   public boolean isSystemOnlyRoute(String requestUri) {
     return matchesAny(requestUri, systemOnlyPaths);
   }
 
   public String[] getPublicPaths() {
     return publicPaths != null ? publicPaths.toArray(new String[0]) : new String[0];
-  }
-
-  public String[] getOpenForAllOriginsPaths() {
-    return openForAllOrigins != null ? openForAllOrigins.toArray(new String[0]) : new String[0];
   }
 
   private boolean matchesAny(String requestUri, List<String> paths) {

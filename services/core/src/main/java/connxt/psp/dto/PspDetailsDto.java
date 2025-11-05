@@ -5,10 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import connxt.fee.dto.FeeDto;
-import connxt.riskrule.dto.RiskRuleDto;
 import connxt.shared.constants.Status;
-import connxt.transactionlimit.dto.TransactionLimitDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,9 +46,6 @@ public class PspDetailsDto {
   private List<MaintenanceWindowDto> maintenanceWindow;
   private List<PspOperationDto> operations;
   private FlowTargetInfo flowTarget;
-  private List<RiskRuleDto> riskRules;
-  private List<FeeDto> feeRules;
-  private List<TransactionLimitDto> transactionLimits;
 
   @Data
   @Builder

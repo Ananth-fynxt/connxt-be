@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import connxt.environment.dto.EnvironmentDto;
 import connxt.environment.service.EnvironmentService;
-import connxt.permission.annotations.RequiresScope;
 import connxt.shared.builder.ResponseBuilder;
 import connxt.shared.builder.dto.ApiResponse;
 
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/environments")
 @RequiredArgsConstructor
 @Validated
-@RequiresScope({"SYSTEM", "FI", "BRAND", "EXTERNAL"})
 public class EnvironmentController {
 
   private final EnvironmentService environmentService;

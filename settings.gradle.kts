@@ -14,7 +14,6 @@ plugins {
 rootProject.name = "connxt-backend"
 
 include("libs:shared")
-include("libs:permission")
 include("libs:denovm")
 include("libs:email")
 include("libs:jwt")

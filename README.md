@@ -56,10 +56,9 @@ connxt-backend/
    ```
 
 3. **Application will be available at:**
-   - Server: http://localhost:8001
-   - Health Check: http://localhost:8001/actuator/health
-   - Swagger: http://localhost:8001/swagger-ui/index.html
-   - JobRunr Dashboard: http://localhost:8000/jobrunr-dashboard
+   - Server: http://localhost:7111
+   - Health Check: http://localhost:7111/actuator/health
+   - Swagger: http://localhost:7111/swagger-ui/index.html
 
 ## 🔧 Development Commands
 
@@ -90,7 +89,7 @@ pkill -f "connxt.ConnxtApplication"
 ### **Kill Port**
 ```bash
 # Terminal command
-lsof -ti:8000,8001 | xargs kill -9
+lsof -ti:8000,7111 | xargs kill -9
 ```
 
 ### **Database Operations**

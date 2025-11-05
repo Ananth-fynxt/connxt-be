@@ -1,36 +1,6 @@
 -- Migration: V010__Create_auth_tables.sql
 -- Description: Create authentication tables (brand_users, brand_roles)
 
--- Create brand_roles table
-CREATE TABLE brand_roles (
-    id TEXT PRIMARY KEY NOT NULL,
-    brand_id TEXT NOT NULL REFERENCES brands(id),
-    environment_id TEXT NOT NULL REFERENCES environments(id),
-    name TEXT NOT NULL,
-    permission JSONB NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    created_by TEXT NOT NULL,
-    updated_by TEXT NOT NULL
-);
-
--- Create brand_users table
-CREATE TABLE brand_users (
-    id TEXT PRIMARY KEY NOT NULL,
-    brand_id TEXT REFERENCES brands(id),
-    environment_id TEXT REFERENCES environments(id),
-    brand_role_id TEXT REFERENCES brand_roles(id),
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    user_id TEXT NOT NULL REFERENCES users(id),
-    scope scope NOT NULL DEFAULT 'BRAND',
-    status user_status NOT NULL DEFAULT 'ACTIVE',
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    created_by TEXT NOT NULL,
-    updated_by TEXT NOT NULL
-);
-
 -- Create tokens table
 CREATE TABLE tokens (
     id TEXT PRIMARY KEY NOT NULL,

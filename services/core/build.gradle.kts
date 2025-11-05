@@ -23,7 +23,6 @@ dependencies {
     
     // Project modules
     implementation(project(":libs:shared"))
-    implementation(project(":libs:permission"))
     implementation(project(":libs:denovm"))
     implementation(project(":libs:email"))
     implementation(project(":libs:jwt"))

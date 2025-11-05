@@ -1,5 +1,6 @@
 # Route Configuration
 # This file contains all route definitions for the application
+# All APIs require SYSTEM scope authentication only
 
 connxt:
   routes:
@@ -10,54 +11,19 @@ connxt:
       - "/swagger-ui.html"
       - "/swagger-ui/**"
       - "/webjars/**"
-      - "/jobrunr/**"
-      - "/jobrunr-dashboard/**"
       - "/api/v1/health/**"
       - "/api/v1/auth/**"
       - "/api/v1/external/**"
 
-    # Paths that require X-BRAND-ID and X-ENV-ID headers (accessible by all 3 scopes: SYSTEM, FI, BRAND)
-    brand-env-paths:
-      - "/api/v1/brand-roles/**"
-      - "/api/v1/brand-users/**"
-      - "/api/v1/brand-customers/**"
-      - "/api/v1/permissions/**"
-      - "/api/v1/psps/**"
-      - "/api/v1/psp-groups/**"
-      - "/api/v1/fees/**"
-      - "/api/v1/transaction-limits/**"
-      - "/api/v1/auto-approvals/**"
-      - "/api/v1/risk-rules/**"
-      - "/api/v1/routing-rules/**"
-      - "/api/v1/conversion-rates/**"
-      - "/api/v1/requests/**"
-      - "/api/v1/wallet/**"
-      - "/api/v1/webhooks/**"
-      - "/api/v1/sessions/**"
-
-    # Paths accessible by all 3 scopes (SYSTEM, FI, BRAND) but don't require brand/env headers
-    no-brand-env-paths:
-      - "/api/v1/brands/**"
-      - "/api/v1/environments/**"
-      - "/api/v1/transactions/**"
-
-    # SYSTEM scope only paths (require SYSTEM scope access)
+    # SYSTEM scope only paths (require SYSTEM scope access via JWT, no permission needed)
     system-only-paths:
       - "/api/v1/system-users/**"
       - "/api/v1/fi/**"
+      - "/api/v1/brands/**"
+      - "/api/v1/environments/**"
+      - "/api/v1/psps/**"
+      - "/api/v1/transactions/**"
       - "/api/v1/flow-types/**"
       - "/api/v1/flow-actions/**"
       - "/api/v1/flow-targets/**"
       - "/api/v1/flow-definitions/**"
-
-    # Open for all origins
-    open-for-all-origins:
-      - "/api/v1/brands/**"
-      - "/api/v1/environments/**"
-      - "/api/v1/brand-customers/**"
-      - "/api/v1/flow-types/**"
-      - "/api/v1/sessions/**"
-      - "/api/v1/transactions/**"
-      - "/api/v1/requests/**"
-      - "/api/v1/wallet/**"
-      - "/api/v1/external/**"
