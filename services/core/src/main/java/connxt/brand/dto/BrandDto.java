@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter
@@ -20,18 +19,13 @@ public class BrandDto {
   @NotBlank(message = "Brand name is required")
   private String name;
 
-  @NotBlank(message = "FI ID is required")
-  private String fiId;
-
-  @NotEmpty(message = "Currency is required")
-  private String[] currencies;
+  @NotBlank(message = "Brand email is required")
+  @Email(message = "Invalid email format")
+  private String email;
 
   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime createdAt;
 
   @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime updatedAt;
-
-  @Email(message = "Invalid email Id")
-  private String email;
 }

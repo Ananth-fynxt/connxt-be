@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Scope {
   SYSTEM("SYSTEM"),
-  FI("FI"),
   BRAND("BRAND"),
   EXTERNAL("EXTERNAL");
 

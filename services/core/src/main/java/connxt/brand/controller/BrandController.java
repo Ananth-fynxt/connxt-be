@@ -37,14 +37,6 @@ public class BrandController {
     return responseBuilder.successResponse(brandService.readAll(), "Brands retrieved successfully");
   }
 
-  @GetMapping("/by-fi/{fiId}")
-  public ResponseEntity<ApiResponse<Object>> readByFiId(
-      @PathVariable("fiId") @Validated @NotBlank String fiId) {
-    log.info("Received request to retrieve brands for FI ID: {}", fiId);
-    return responseBuilder.successResponse(
-        brandService.findByFiId(fiId), "Brands retrieved successfully");
-  }
-
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponse<Object>> read(
       @PathVariable("id") @Validated @NotBlank String id) {

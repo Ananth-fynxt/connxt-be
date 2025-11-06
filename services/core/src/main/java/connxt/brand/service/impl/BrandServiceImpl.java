@@ -1,6 +1,7 @@
 package connxt.brand.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import connxt.brand.service.BrandService;
 import connxt.brand.service.mappers.BrandMapper;
 import connxt.environment.dto.EnvironmentDto;
 import connxt.environment.service.EnvironmentService;
-import connxt.fi.repository.FiRepository;
 import connxt.shared.constants.ErrorCode;
 import connxt.shared.service.NameUniquenessService;
 
@@ -28,16 +28,18 @@ public class BrandServiceImpl implements BrandService {
 
   private final BrandRepository brandRepository;
   private final BrandMapper brandMapper;
-  private final FiRepository fiRepository;
   private final EnvironmentService environmentService;
   private final NameUniquenessService nameUniquenessService;
 
   @Override
   @Transactional
   public BrandDto create(BrandDto dto) {
-    verifyFiExists(dto.getFiId());
     nameUniquenessService.validateForCreate(
-        name -> brandRepository.existsByFiIdAndName(dto.getFiId(), name), "Brand", dto.getName());
+        name -> brandRepository.existsByName(name), "Brand", dto.getName());
+    if (brandRepository.existsByEmail(dto.getEmail())) {
+      throw new ResponseStatusException(
+          HttpStatus.CONFLICT, "Brand already exists with the given email");
+    }
     Brand brand = brandMapper.toBrand(dto);
     Brand savedBrand = brandRepository.save(brand);
 
@@ -76,12 +78,22 @@ public class BrandServiceImpl implements BrandService {
     nameUniquenessService.validateForUpdateWithFlowContext(
         existingBrand.getName(),
         dto.getName(),
-        dto.getFiId(),
         null,
         null,
-        (brandId, environmentId, flowActionId, name) ->
-            brandRepository.existsByFiIdAndNameAndIdNot(brandId, name, dto.getId()),
+        null,
+        (brandId, environmentId, flowActionId, name) -> {
+          Optional<Brand> brandWithName = brandRepository.findByName(name);
+          return brandWithName.isPresent() && !brandWithName.get().getId().equals(dto.getId());
+        },
         "Brand");
+
+    // Validate email uniqueness if email is being changed
+    if (!existingBrand.getEmail().equals(dto.getEmail())) {
+      if (brandRepository.existsByEmail(dto.getEmail())) {
+        throw new ResponseStatusException(
+            HttpStatus.CONFLICT, "Brand already exists with the given email");
+      }
+    }
 
     brandMapper.toUpdateBrand(dto, existingBrand);
     Brand brand = brandRepository.save(existingBrand);
@@ -98,12 +110,6 @@ public class BrandServiceImpl implements BrandService {
   private void verifyBrandExists(String id) {
     if (!brandRepository.existsById(id)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorCode.BRAND_NOT_FOUND.getCode());
-    }
-  }
-
-  private void verifyFiExists(String fiId) {
-    if (!fiRepository.existsById(fiId)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorCode.FI_NOT_FOUND.getCode());
     }
   }
 
@@ -124,12 +130,6 @@ public class BrandServiceImpl implements BrandService {
           e.getMessage(),
           e);
     }
-  }
-
-  @Override
-  public List<BrandDto> findByFiId(String fiId) {
-    List<Brand> brands = brandRepository.findByFiId(fiId);
-    return brands.stream().map(brandMapper::toBrandDto).toList();
   }
 
   @Override

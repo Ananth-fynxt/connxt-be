@@ -19,15 +19,9 @@ public class Brand extends AuditingEntity {
 
   @Id @BrandId private String id;
 
-  @Column(name = "fi_id", nullable = false)
-  private String fiId;
-
-  @Column(name = "currencies", nullable = false)
-  private String[] currencies;
-
-  @Column(name = "name", nullable = false)
+  @Column(name = "name", nullable = false, unique = true)
   private String name;
 
-  @Column(name = "email", nullable = false)
+  @Column(name = "email", nullable = false, unique = true)
   private String email;
 }

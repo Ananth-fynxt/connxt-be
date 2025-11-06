@@ -44,18 +44,6 @@ public class DynamicClaimParserValidator {
       if (Scope.SYSTEM.getValue().equals(scope)) {
         // SYSTEM scope: No brands or accessible_brands list - has full access
         return true;
-      } else if (Scope.FI.getValue().equals(scope)) {
-        // FI scope: has "brands": [] array of values
-        Object brandsObj = claims.get("brands");
-        List<Map<String, Object>> brandsList = parseClaim(brandsObj);
-        String tokenFiId = (String) claims.get("fi_id");
-
-        if (tokenFiId == null || brandsList == null || brandsList.isEmpty()) {
-          return false;
-        }
-
-        // For FI scope, validate brand belongs to the user's FI
-        return validateBrandBelongsToFi(brandsList, brandId, environmentId, tokenFiId);
       } else if (Scope.BRAND.getValue().equals(scope)) {
         // BRAND scope: has "accessible_brands": [] array of values
         Object accessibleBrandsObj = claims.get("accessible_brands");
@@ -109,39 +97,6 @@ public class DynamicClaimParserValidator {
     return false;
   }
 
-  /**
-   * Validates that a brand belongs to the specified FI. For FI-level access, if the brand is in the
-   * user's brands list and the user has the correct fi_id, then they have access.
-   */
-  private boolean validateBrandBelongsToFi(
-      List<Map<String, Object>> brandsList, String brandId, String environmentId, String fiId) {
-
-    for (Map<String, Object> brand : brandsList) {
-      String claimBrandId = (String) brand.get("id");
-
-      if (brandId.equals(claimBrandId)) {
-        // Brand found in user's brands list - check environment
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> environments =
-            (List<Map<String, Object>>) brand.get("environments");
-
-        if (environments != null) {
-          for (Map<String, Object> environment : environments) {
-            String claimEnvironmentId = (String) environment.get("id");
-            if (environmentId.equals(claimEnvironmentId)) {
-              return true;
-            }
-          }
-        }
-        // Brand found but environment not found
-        return false;
-      }
-    }
-
-    // Brand not found
-    return false;
-  }
-
   /** Extract roleId from brand/environment */
   public String extractRoleId(
       List<Map<String, Object>> brands, String brandId, String environmentId) {
@@ -169,11 +124,6 @@ public class DynamicClaimParserValidator {
     if (Scope.SYSTEM.getValue().equals(scope)) {
       // SYSTEM scope: No brands list - extract role from direct claims
       return (String) claims.get("role_id");
-    } else if (Scope.FI.getValue().equals(scope)) {
-      // FI scope: extract role from brands list
-      Object brandsObj = claims.get("brands");
-      List<Map<String, Object>> brands = parseClaim(brandsObj);
-      return extractRoleId(brands, brandId, environmentId);
     } else if (Scope.BRAND.getValue().equals(scope)) {
       // BRAND scope: extract role from accessible_brands list
       Object accessibleBrandsObj = claims.get("accessible_brands");
@@ -302,7 +252,7 @@ public class DynamicClaimParserValidator {
 
   /** Extracts accessible brand IDs based on scope */
   public List<String> extractAccessibleBrandIds(Map<String, Object> claims, String scope) {
-    if (Scope.SYSTEM.getValue().equals(scope) || Scope.FI.getValue().equals(scope)) {
+    if (Scope.SYSTEM.getValue().equals(scope)) {
       Object brandsObj = claims.get("brands");
       if (brandsObj != null) {
         List<Map<String, Object>> brandsList = parseClaim(brandsObj);
@@ -316,14 +266,6 @@ public class DynamicClaimParserValidator {
       }
     }
     return List.of();
-  }
-
-  /** Extracts FI ID based on scope */
-  public String extractFiId(Map<String, Object> claims, String scope) {
-    if (Scope.FI.getValue().equals(scope)) {
-      return (String) claims.get("fi_id");
-    }
-    return null;
   }
 
   /** Extracts customer ID based on scope */

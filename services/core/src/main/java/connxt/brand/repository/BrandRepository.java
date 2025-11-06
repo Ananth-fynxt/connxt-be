@@ -20,16 +20,14 @@ public interface BrandRepository extends JpaRepository<Brand, String> {
   boolean existsByName(@Param("name") String name);
 
   @NonNull
+  Optional<Brand> findByEmail(@Param("email") String email);
+
+  boolean existsByEmail(@Param("email") String email);
+
+  @NonNull
   List<Brand> findAll();
 
   void deleteById(@Param("id") @NonNull String id);
-
-  boolean existsByFiIdAndName(@Param("fiId") String fiId, @Param("name") String name);
-
-  boolean existsByFiIdAndNameAndIdNot(
-      @Param("fiId") String fiId, @Param("name") String name, @Param("id") String id);
-
-  List<Brand> findByFiId(@Param("fiId") String fiId);
 
   @Query("SELECT b FROM Brand b JOIN BrandUser bu ON b.id = bu.brandId WHERE bu.userId = :userId")
   List<Brand> findByUserId(@Param("userId") String userId);

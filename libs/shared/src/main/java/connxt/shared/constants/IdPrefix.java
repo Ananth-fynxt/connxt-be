@@ -5,9 +5,6 @@ package connxt.shared.constants;
  */
 public final class IdPrefix {
 
-  // FI related
-  public static final String FI = "fin";
-
   // Brand related
   public static final String BRAND = "brn";
 

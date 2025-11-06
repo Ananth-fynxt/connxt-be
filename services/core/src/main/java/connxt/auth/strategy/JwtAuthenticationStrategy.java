@@ -150,7 +150,6 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
     // Extract only common claims that are available in all JWT tokens
     String scope = (String) claims.get("scope");
     String authType = (String) claims.get("auth_type");
-    String fiId = (String) claims.get("fi_id");
     String customerId = (String) claims.get("customer_id");
 
     // Set minimal context with only common claims for scope validation
@@ -160,7 +159,6 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
             .userId(subject)
             .scope(scope)
             .authType(authType)
-            .fiId(fiId)
             .customerId(customerId)
             .build();
 

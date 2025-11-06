@@ -18,7 +18,6 @@ connxt:
     # SYSTEM scope only paths (require SYSTEM scope access via JWT, no permission needed)
     system-only-paths:
       - "/api/v1/system-users/**"
-      - "/api/v1/fi/**"
       - "/api/v1/brands/**"
       - "/api/v1/environments/**"
       - "/api/v1/psps/**"

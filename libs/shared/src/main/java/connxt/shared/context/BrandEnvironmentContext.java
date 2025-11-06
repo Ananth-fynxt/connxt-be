@@ -18,7 +18,6 @@ public class BrandEnvironmentContext {
   private String userId;
   private String scope;
   private String authType;
-  private String fiId;
   private String customerId;
   private List<String> accessibleBrandIds;
 }

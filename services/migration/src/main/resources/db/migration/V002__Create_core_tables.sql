@@ -27,27 +27,11 @@ CREATE TABLE system_users (
     updated_by TEXT NOT NULL
 );
 
--- Create fi table (Financial Institution)
-CREATE TABLE fi (
-    id TEXT PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    user_id TEXT NOT NULL REFERENCES users(id),
-    scope scope NOT NULL DEFAULT 'FI',
-    status user_status NOT NULL DEFAULT 'ACTIVE',
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL,
-    created_by TEXT NOT NULL,
-    updated_by TEXT NOT NULL
-);
-
 -- Create brands table
 CREATE TABLE brands (
     id TEXT PRIMARY KEY NOT NULL,
-    fi_id TEXT NOT NULL REFERENCES fi(id),
-    currencies TEXT[] NOT NULL,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     created_by TEXT NOT NULL,
@@ -131,11 +115,8 @@ CREATE TABLE flow_definitions (
 CREATE INDEX idx_system_users_email ON system_users(email);
 CREATE UNIQUE INDEX idx_system_users_name_email ON system_users(name, email);
 
-CREATE INDEX idx_fi_email ON fi(email);
-CREATE UNIQUE INDEX idx_fi_name_email ON fi(name, email);
-
-CREATE INDEX idx_brands_fi_id ON brands(fi_id);
-CREATE UNIQUE INDEX idx_brands_fi_name ON brands(fi_id, name);
+CREATE UNIQUE INDEX idx_brands_name ON brands(name);
+CREATE UNIQUE INDEX idx_brands_email ON brands(email);
 
 CREATE INDEX idx_environments_brand_id ON environments(brand_id);
 

@@ -23,8 +23,6 @@ public class UserInfo {
   private String authType;
 
   // For SYSTEM scope users
-  private String fiId;
-  private String fiName;
   private List<BrandInfo> brands;
 
   // For BRAND scope users

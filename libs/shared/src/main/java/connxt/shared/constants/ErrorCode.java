@@ -77,15 +77,6 @@ public enum ErrorCode {
   BRAND_STATUS_INVALID("1303", "Invalid brand status"),
   BRAND_PERMISSION_DENIED("1304", "Insufficient brand permissions"),
 
-  // FI Management Errors (1350-1399)
-  FI_NOT_FOUND("1350", "Financial Institution not found"),
-  FI_ALREADY_EXISTS("1351", "Financial Institution already exists"),
-  FI_EMAIL_ALREADY_EXISTS("1352", "Financial Institution email already exists"),
-  FI_NAME_INVALID("1353", "Invalid FI name"),
-  FI_SCOPE_INVALID("1354", "Invalid FI scope"),
-  FI_STATUS_INVALID("1355", "Invalid FI status"),
-  FI_PERMISSION_DENIED("1356", "Insufficient FI permissions"),
-
   // Environment Management Errors (1400-1499)
   ENVIRONMENT_NOT_FOUND("1400", "Environment not found"),
   ENVIRONMENT_ALREADY_EXISTS("1401", "Environment already exists"),
@@ -159,18 +150,14 @@ public enum ErrorCode {
   NO_VALID_AUTHENTICATION("1642", "No valid authentication method provided"),
 
   // Permission and Access Control Errors (1650-1699)
-  CROSS_FI_ACCESS_DENIED(
-      "1650", "Cross-FI access denied. You can only access resources within your own FI"),
   CROSS_BRAND_ACCESS_DENIED(
       "1651", "Cross-brand access denied. You can only access your authorized brands"),
   CROSS_ENVIRONMENT_ACCESS_DENIED(
       "1652", "Cross-environment access denied. You can only access your authorized environment"),
-  FI_NOT_IN_TOKEN("1653", "FI ID not found in access token claims"),
   BRAND_NOT_IN_ACCESSIBLE_LIST("1654", "Requested brand is not in your accessible brands list"),
   ENVIRONMENT_NOT_IN_ACCESSIBLE_LIST(
       "1655", "Requested environment is not in your accessible environments list"),
   INVALID_SCOPE_FOR_OPERATION("1656", "Your scope level does not permit this operation"),
-  FI_ID_MISMATCH("1657", "FI ID in request does not match your token FI ID"),
   CUSTOMER_ID_MISMATCH("1658", "Customer ID in request does not match your token customer ID"),
   INSUFFICIENT_PERMISSIONS("1659", "Insufficient permissions to access this resource"),
 
@@ -464,8 +451,6 @@ public enum ErrorCode {
   SESSION_CONCURRENCY_LIMIT_EXCEEDED("2080", "Maximum concurrent sessions limit exceeded"),
 
   // Permission Validation Errors (1700-1799)
-  FI_BRAND_ACCESS_DENIED("1700", "FI user does not have access to the requested brand"),
-  FI_ENVIRONMENT_ACCESS_DENIED("1701", "FI user does not have access to the requested environment"),
   BRAND_ACCESS_DENIED("1702", "User does not have access to the requested brand"),
   ENVIRONMENT_ACCESS_DENIED("1703", "User does not have access to the requested environment"),
   ROLE_REQUIRED("1704", "User does not have a valid role for this operation"),

@@ -1,11 +1,7 @@
--- Insert users first for System, FI and Brand (dummy password: d2ZZa17IF8ZGoVtL)
+-- Insert users first for System and Brand (dummy password: d2ZZa17IF8ZGoVtL)
 INSERT INTO users (id, email, password, created_at, updated_at, created_by, updated_by) VALUES
 ('usr_sys_001', 'system.admin@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_sys_002', 'system.operator@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_001', 'admin@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_002', 'ananth@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_003', 'lingesh@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
-('usr_fi_004', 'deepan@connxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_001', 'john.admin@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_002', 'jane.manager@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system'),
 ('usr_brand_003', 'bob.agent@fynxt.com', 'Vlm9Fn9CHZDLlxvP70Hhusr1hBM5igoMtluuCL68RgGmXHhhBNFjXfZJzM4=', NOW(), NOW(), 'system', 'system');
@@ -14,17 +10,11 @@ INSERT INTO system_users (id, name, email, user_id, scope, status, created_at, u
 ('sys_001', 'System Administrator', 'system.admin@connxt.com', 'usr_sys_001', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
 ('sys_002', 'System Operator', 'system.operator@connxt.com', 'usr_sys_002', 'SYSTEM', 'ACTIVE', NOW(), NOW(), 'system', 'system');
 
-INSERT INTO fi (id, name, email, user_id, scope, status, created_at, updated_at, created_by, updated_by) VALUES
-('fi_001', 'Connxt Financial Group', 'admin@connxt.com', 'usr_fi_001', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_002', 'Connxt Financial Group', 'ananth@connxt.com', 'usr_fi_002', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_003', 'Connxt Financial Group', 'lingesh@connxt.com', 'usr_fi_003', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system'),
-('fi_004', 'Connxt Financial Group', 'deepan@connxt.com', 'usr_fi_004', 'FI', 'ACTIVE', NOW(), NOW(), 'system', 'system');
-
-INSERT INTO brands (id, fi_id, currencies, name, email, created_at, updated_at, created_by, updated_by) VALUES
-('brn_001', 'fi_001', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_002', 'fi_002', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_003', 'fi_003', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system'),
-('brn_004', 'fi_004', ARRAY['USD', 'EUR', 'GBP'], 'Connxt Payment Gateway', 'brand@fynxt.com', NOW(), NOW(), 'system', 'system');
+INSERT INTO brands (id, name, email, created_at, updated_at, created_by, updated_by) VALUES
+('brn_001', 'Connxt Payment Gateway', 'brand1@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_002', 'Connxt Payment Gateway 2', 'brand2@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_003', 'Connxt Payment Gateway 3', 'brand3@fynxt.com', NOW(), NOW(), 'system', 'system'),
+('brn_004', 'Connxt Payment Gateway 4', 'brand4@fynxt.com', NOW(), NOW(), 'system', 'system');
 
 INSERT INTO environments (id, name, secret, token, origin, success_redirect_url, failure_redirect_url, brand_id, created_at, updated_at, created_by, updated_by) VALUES
 ('env_uat_001', 'Connxt UAT Environment', 'sec_connxt_uat_123', 'tok_connxt_uat_456', 'https://salescp.fynxt.com', 'https://salescp.fynxt.com/MyWallet/Success/0', 'https://salescp.fynxt.com/MyWallet/Fail/0', 'brn_001', NOW(), NOW(), 'system', 'system'),

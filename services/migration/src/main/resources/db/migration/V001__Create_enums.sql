@@ -3,7 +3,7 @@
 -- Service: shared
 
 -- Create scope enum for system vs brand level permissions
-CREATE TYPE scope AS ENUM ('SYSTEM', 'FI', 'BRAND', 'EXTERNAL');
+CREATE TYPE scope AS ENUM ('SYSTEM', 'BRAND', 'EXTERNAL');
 
 -- Create status enum for enabled/disabled states
 CREATE TYPE status AS ENUM ('ENABLED', 'DISABLED');

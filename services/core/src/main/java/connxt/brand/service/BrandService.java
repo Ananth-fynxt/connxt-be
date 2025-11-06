@@ -16,7 +16,5 @@ public interface BrandService {
 
   void delete(String id);
 
-  List<BrandDto> findByFiId(String fiId);
-
   List<BrandDto> findByUserId(String userId);
 }
