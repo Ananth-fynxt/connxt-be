@@ -39,6 +39,9 @@ public class SystemUser extends AuditingEntity {
   @Column(name = "user_id")
   private String userId;
 
+  @Column(name = "system_role_id", nullable = false)
+  private String systemRoleId;
+
   @Type(
       value = PostgreSQLEnumType.class,
       parameters =

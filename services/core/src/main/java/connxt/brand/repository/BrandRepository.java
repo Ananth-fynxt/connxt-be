@@ -29,6 +29,9 @@ public interface BrandRepository extends JpaRepository<Brand, String> {
 
   void deleteById(@Param("id") @NonNull String id);
 
-  @Query("SELECT b FROM Brand b JOIN BrandUser bu ON b.id = bu.brandId WHERE bu.userId = :userId")
+  @Query(
+      value =
+          "SELECT b.* FROM brands b WHERE b.id IN (SELECT bu.brand_id FROM brand_users bu WHERE bu.user_id = :userId)",
+      nativeQuery = true)
   List<Brand> findByUserId(@Param("userId") String userId);
 }

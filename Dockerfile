@@ -47,7 +47,6 @@ COPY --from=build --chown=connxt:connxt /app/services/core/build/libs/*.jar app.
 
 # Expose application ports
 EXPOSE 7111
-EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \

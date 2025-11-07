@@ -55,7 +55,6 @@ services:
       EMAIL_SENDER_ADDRESS: ${EMAIL_SENDER_ADDRESS}
     ports:
       - "7111:7111"
-      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy

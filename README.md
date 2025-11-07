@@ -89,7 +89,7 @@ pkill -f "connxt.ConnxtApplication"
 ### **Kill Port**
 ```bash
 # Terminal command
-lsof -ti:8000,7111 | xargs kill -9
+lsof -ti:7111 | xargs kill -9
 ```
 
 ### **Database Operations**

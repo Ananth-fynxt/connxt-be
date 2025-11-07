@@ -28,6 +28,9 @@ public class SystemUserDto {
 
   private String userId;
 
+  @NotBlank(message = "System Role ID is required")
+  private String systemRoleId;
+
   @Builder.Default private Scope scope = Scope.SYSTEM;
 
   @Builder.Default private UserStatus status = UserStatus.ACTIVE;

@@ -19,13 +19,3 @@ CREATE TABLE tokens (
 -- Create indexes for performance
 CREATE INDEX idx_tokens_customer_id ON tokens(customer_id);
 
-CREATE INDEX idx_users_email ON users(email);
-
--- Create indexes for better query performance
-CREATE UNIQUE INDEX idx_system_roles_name ON system_roles(name);
-
-CREATE INDEX idx_brand_users_brand_id ON brand_users(brand_id, environment_id);
-CREATE INDEX idx_brand_users_email ON brand_users(email);
-CREATE UNIQUE INDEX idx_brand_users_brand_name_email ON brand_users(brand_id, environment_id, email);
-
-

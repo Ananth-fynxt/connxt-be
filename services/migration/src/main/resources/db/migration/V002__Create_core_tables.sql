@@ -13,25 +13,26 @@ CREATE TABLE users (
     updated_by TEXT NOT NULL
 );
 
--- Create system_users table for FYNXT system administrators
-CREATE TABLE system_users (
+-- Create system_roles table
+CREATE TABLE system_roles (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    user_id TEXT NOT NULL REFERENCES users(id),
-    scope scope NOT NULL DEFAULT 'SYSTEM',
-    status user_status NOT NULL DEFAULT 'ACTIVE',
+    permissions JSONB NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     created_by TEXT NOT NULL,
     updated_by TEXT NOT NULL
 );
 
--- Create system_roles table
-CREATE TABLE system_roles (
+-- Create system_users table for FYNXT system administrators
+CREATE TABLE system_users (
     id TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    permissions JSONB NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    user_id TEXT NOT NULL REFERENCES users(id),
+    system_role_id TEXT NOT NULL REFERENCES system_roles(id),
+    scope scope NOT NULL DEFAULT 'SYSTEM',
+    status user_status NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     created_by TEXT NOT NULL,
@@ -128,6 +129,10 @@ CREATE UNIQUE INDEX idx_system_users_name_email ON system_users(name, email);
 
 CREATE UNIQUE INDEX idx_brands_name ON brands(name);
 CREATE UNIQUE INDEX idx_brands_email ON brands(email);
+
+CREATE INDEX idx_users_email ON users(email);
+
+CREATE UNIQUE INDEX idx_system_roles_name ON system_roles(name);
 
 CREATE INDEX idx_environments_brand_id ON environments(brand_id);
 

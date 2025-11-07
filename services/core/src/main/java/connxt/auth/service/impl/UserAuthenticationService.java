@@ -47,7 +47,7 @@ public class UserAuthenticationService {
         .scope(Scope.SYSTEM)
         .status(systemUserDto.getStatus())
         .authType("INTERNAL")
-        .roleId(null) // System users don't have roleId yet - can be added later if needed
+        .roleId(systemUserDto.getSystemRoleId())
         .build();
   }
 
