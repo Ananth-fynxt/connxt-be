@@ -27,6 +27,17 @@ CREATE TABLE system_users (
     updated_by TEXT NOT NULL
 );
 
+-- Create system_roles table
+CREATE TABLE system_roles (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    permissions JSONB NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+    created_by TEXT NOT NULL,
+    updated_by TEXT NOT NULL
+);
+
 -- Create brands table
 CREATE TABLE brands (
     id TEXT PRIMARY KEY NOT NULL,

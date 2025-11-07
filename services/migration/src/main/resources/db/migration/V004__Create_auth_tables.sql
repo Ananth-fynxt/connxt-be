@@ -1,5 +1,5 @@
 -- Migration: V010__Create_auth_tables.sql
--- Description: Create authentication tables (brand_users, brand_roles)
+-- Description: Create authentication tables (brand_users, system_roles)
 
 -- Create tokens table
 CREATE TABLE tokens (
@@ -22,8 +22,7 @@ CREATE INDEX idx_tokens_customer_id ON tokens(customer_id);
 CREATE INDEX idx_users_email ON users(email);
 
 -- Create indexes for better query performance
-CREATE INDEX idx_brand_roles_brand_id ON brand_roles(brand_id, environment_id);
-CREATE UNIQUE INDEX idx_brand_roles_brand_name_permission ON brand_roles(brand_id, environment_id, name);
+CREATE UNIQUE INDEX idx_system_roles_name ON system_roles(name);
 
 CREATE INDEX idx_brand_users_brand_id ON brand_users(brand_id, environment_id);
 CREATE INDEX idx_brand_users_email ON brand_users(email);

@@ -55,12 +55,6 @@ public class DynamicClaimParserValidator {
 
         // Check if the requested brand and environment exist in accessible_brands
         return validateBrandEnvironmentInList(brandsList, brandId, environmentId);
-      } else if (Scope.EXTERNAL.getValue().equals(scope)) {
-        // EXTERNAL scope: validate against specific brand_id and environment_id in claims
-        String tokenBrandId = (String) claims.get("brand_id");
-        String tokenEnvironmentId = (String) claims.get("environment_id");
-
-        return brandId.equals(tokenBrandId) && environmentId.equals(tokenEnvironmentId);
       } else {
         return false;
       }
@@ -129,9 +123,6 @@ public class DynamicClaimParserValidator {
       Object accessibleBrandsObj = claims.get("accessible_brands");
       List<Map<String, Object>> accessibleBrands = parseClaim(accessibleBrandsObj);
       return extractRoleId(accessibleBrands, brandId, environmentId);
-    } else if (Scope.EXTERNAL.getValue().equals(scope)) {
-      // EXTERNAL scope: extract role from direct claims
-      return (String) claims.get("role_id");
     }
 
     return null;
@@ -270,9 +261,7 @@ public class DynamicClaimParserValidator {
 
   /** Extracts customer ID based on scope */
   public String extractCustomerId(Map<String, Object> claims, String scope) {
-    if (Scope.EXTERNAL.getValue().equals(scope)) {
-      return (String) claims.get("customer_id");
-    }
+    // Customer ID extraction is not scope-specific in this implementation
     return null;
   }
 }

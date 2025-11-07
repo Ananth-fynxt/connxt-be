@@ -16,7 +16,6 @@ import lombok.Data;
 public class RouteConfig {
 
   private List<String> publicPaths;
-  private List<String> systemOnlyPaths;
   private final PathPatternParser parser = new PathPatternParser();
 
   public boolean isPublic(String requestUri) {
@@ -27,10 +26,6 @@ public class RouteConfig {
     return !isPublic(requestUri);
   }
 
-  public boolean isSystemOnlyRoute(String requestUri) {
-    return matchesAny(requestUri, systemOnlyPaths);
-  }
-
   public String[] getPublicPaths() {
     return publicPaths != null ? publicPaths.toArray(new String[0]) : new String[0];
   }
@@ -39,10 +34,14 @@ public class RouteConfig {
     return requestUri != null
         && paths != null
         && paths.stream()
+            .filter(path -> path != null)
+            .map(String::trim)
+            .filter(path -> !path.isEmpty())
             .anyMatch(
                 path -> {
+                  String candidate = path;
                   try {
-                    PathPattern pattern = parser.parse(path);
+                    PathPattern pattern = parser.parse(candidate);
                     PathContainer pathContainer = PathContainer.parsePath(requestUri);
                     return pattern.matches(pathContainer);
                   } catch (Exception e) {

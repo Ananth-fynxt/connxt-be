@@ -163,12 +163,13 @@ public class AuthServiceImpl implements AuthService {
   private Map<String, Object> buildUserAccessTokenClaims(UserInfo user) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("auth_type", AuthType.APPLICATION_USER.getValue());
-    claims.put("token_type", TokenType.ACCESS.getValue());
-    claims.put("scope", user.getScope().getValue());
     claims.put("user_id", user.getUserId());
+    claims.put("scope", user.getScope().getValue());
+    claims.put("token_type", TokenType.ACCESS.getValue());
     claims.put("email", user.getEmail());
-    claims.put("brands", user.getBrands());
-    claims.put("accessible_brands", user.getAccessibleBrands());
+    if (user.getRoleId() != null) {
+      claims.put("roleId", user.getRoleId());
+    }
     return claims;
   }
 
@@ -183,16 +184,12 @@ public class AuthServiceImpl implements AuthService {
 
   private JwtTokenResponse generateAccessTokenFromRefreshToken(
       String authType, JwtValidationResponse validationResult) {
-    if (AuthType.APPLICATION_USER.getValue().equals(authType)) {
-      return generateAccessTokenForApplicationUser(validationResult);
-    } else {
+    // Only APPLICATION_USER auth type is supported (system users)
+    if (!AuthType.APPLICATION_USER.getValue().equals(authType)) {
       throw new ResponseStatusException(
           HttpStatus.UNAUTHORIZED, ErrorCode.TOKEN_VALIDATION_FAILED.getCode());
     }
-  }
 
-  private JwtTokenResponse generateAccessTokenForApplicationUser(
-      JwtValidationResponse validationResult) {
     String userId = (String) validationResult.getClaims().get("user_id");
     UserInfo user = userAuthService.getUserInfoById(userId);
     return generateUserToken(user);
@@ -240,7 +237,6 @@ public class AuthServiceImpl implements AuthService {
 
     JwtValidationResponse result = jwtExecutor.validateToken(request);
     if (result.isValid()) {
-      // For system user logins, use user_id
       String userId = (String) result.getClaims().get("user_id");
       if (userId != null) {
         return userId;

@@ -19,8 +19,6 @@ import connxt.jwt.executor.JwtExecutor;
 import connxt.shared.config.RouteConfig;
 import connxt.shared.constants.ErrorCode;
 import connxt.shared.constants.TokenType;
-import connxt.shared.context.BrandEnvironmentContext;
-import connxt.shared.context.BrandEnvironmentContextHolder;
 import connxt.shared.filter.auth.AuthenticationStrategy;
 import connxt.shared.util.ErrorResponseUtil;
 
@@ -123,9 +121,6 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
       // Set Spring Security context to indicate user is authenticated
       setSpringSecurityContext(validationResult.getClaims(), validationResult.getSubject());
 
-      // Set BrandEnvironmentContext for scope validation
-      setBrandEnvironmentContext(validationResult.getClaims(), validationResult.getSubject());
-
       return true;
     } catch (Exception e) {
       ErrorResponseUtil.writeErrorResponse(
@@ -136,7 +131,6 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
 
   private void setSpringSecurityContext(Map<String, Object> claims, String subject) {
     // Set minimal authentication context at JWT validation stage
-    // The BrandEnvironmentContextFilter will update this with proper scope-based authorities
     List<SimpleGrantedAuthority> authorities =
         List.of(new SimpleGrantedAuthority("ROLE_AUTHENTICATED"));
 
@@ -144,25 +138,6 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
         new UsernamePasswordAuthenticationToken(subject, null, authorities);
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
-  }
-
-  private void setBrandEnvironmentContext(Map<String, Object> claims, String subject) {
-    // Extract only common claims that are available in all JWT tokens
-    String scope = (String) claims.get("scope");
-    String authType = (String) claims.get("auth_type");
-    String customerId = (String) claims.get("customer_id");
-
-    // Set minimal context with only common claims for scope validation
-    // brandId and environmentId will be set later by HeaderRequiredRouteStrategy if needed
-    BrandEnvironmentContext context =
-        BrandEnvironmentContext.builder()
-            .userId(subject)
-            .scope(scope)
-            .authType(authType)
-            .customerId(customerId)
-            .build();
-
-    BrandEnvironmentContextHolder.setContext(context);
   }
 
   private boolean isAccessTokenActiveInDatabase(String token, String subject) {

@@ -1,6 +1,6 @@
 # Route Configuration
 # This file contains all route definitions for the application
-# All APIs require SYSTEM scope authentication only
+# Public paths don't require JWT token, all other paths require JWT token validation
 
 connxt:
   routes:
@@ -14,15 +14,3 @@ connxt:
       - "/api/v1/health/**"
       - "/api/v1/auth/**"
       - "/api/v1/external/**"
-
-    # SYSTEM scope only paths (require SYSTEM scope access via JWT, no permission needed)
-    system-only-paths:
-      - "/api/v1/system-users/**"
-      - "/api/v1/brands/**"
-      - "/api/v1/environments/**"
-      - "/api/v1/psps/**"
-      - "/api/v1/transactions/**"
-      - "/api/v1/flow-types/**"
-      - "/api/v1/flow-actions/**"
-      - "/api/v1/flow-targets/**"
-      - "/api/v1/flow-definitions/**"

@@ -31,7 +31,13 @@ public class UserAuthenticationService {
     User user = userService.findByEmailForAuthentication(email);
     validateUserPassword(user, password, email);
 
-    return buildUserInfo(user);
+    // Only system users can login
+    SystemUserDto systemUserDto = systemUserService.findByUserId(user.getId());
+    if (systemUserDto == null) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, ErrorCode.USER_NO_ACCESS.getCode());
+    }
+
+    return buildSystemUserInfo(user, systemUserDto);
   }
 
   private UserInfo buildSystemUserInfo(User user, SystemUserDto systemUserDto) {
@@ -41,14 +47,20 @@ public class UserAuthenticationService {
         .scope(Scope.SYSTEM)
         .status(systemUserDto.getStatus())
         .authType("INTERNAL")
+        .roleId(null) // System users don't have roleId yet - can be added later if needed
         .build();
   }
 
   public UserInfo getUserInfoById(String userId) {
-    log.debug("Fetching user info by ID: {}", userId);
+    log.debug("Fetching system user info by ID: {}", userId);
 
     User user = userService.findByIdForAuthentication(userId);
-    return buildUserInfo(user);
+    SystemUserDto systemUserDto = systemUserService.findByUserId(user.getId());
+    if (systemUserDto == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorCode.USER_NOT_FOUND.getCode());
+    }
+
+    return buildSystemUserInfo(user, systemUserDto);
   }
 
   private void validateUserPassword(User user, String password, String email) {
@@ -63,20 +75,5 @@ public class UserAuthenticationService {
       throw new ResponseStatusException(
           HttpStatus.UNAUTHORIZED, ErrorCode.AUTH_INVALID_CREDENTIALS.getCode());
     }
-  }
-
-  private UserInfo buildUserInfo(User user) {
-    log.debug("Building user info for user ID: {}, email: {}", user.getId(), user.getEmail());
-
-    // Only system users are allowed
-    SystemUserDto systemUserDto = systemUserService.findByUserId(user.getId());
-    log.debug("System user lookup result: {}", systemUserDto != null ? "found" : "not found");
-    if (systemUserDto != null) {
-      log.debug("User is a system user, building system user info");
-      return buildSystemUserInfo(user, systemUserDto);
-    }
-
-    // User exists but is not a system user
-    throw new ResponseStatusException(HttpStatus.FORBIDDEN, ErrorCode.USER_NO_ACCESS.getCode());
   }
 }

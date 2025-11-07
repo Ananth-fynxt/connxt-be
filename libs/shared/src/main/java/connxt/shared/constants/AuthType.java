@@ -3,8 +3,7 @@ package connxt.shared.constants;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AuthType {
-  APPLICATION_USER("APPLICATION_USER"),
-  EXTERNAL_API("EXTERNAL_API");
+  APPLICATION_USER("APPLICATION_USER");
 
   private final String value;
 

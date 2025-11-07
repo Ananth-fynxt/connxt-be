@@ -1,7 +1,5 @@
 package connxt.auth.dto;
 
-import java.util.List;
-
 import connxt.shared.constants.Scope;
 import connxt.shared.constants.UserStatus;
 
@@ -21,30 +19,5 @@ public class UserInfo {
   private Scope scope;
   private UserStatus status;
   private String authType;
-
-  // For SYSTEM scope users
-  private List<BrandInfo> brands;
-
-  // For BRAND scope users
-  private List<BrandInfo> accessibleBrands;
-
-  @Data
-  @Builder
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class BrandInfo {
-    private String id;
-    private String name;
-    private List<EnvironmentInfo> environments;
-  }
-
-  @Data
-  @Builder
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class EnvironmentInfo {
-    private String id;
-    private String name;
-    private String roleId;
-  }
+  private String roleId;
 }

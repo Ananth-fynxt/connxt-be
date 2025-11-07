@@ -9,7 +9,7 @@
     "auto_approvals": {
       "available_actions": ["create", "read", "update", "delete"]
     },
-    "brand_roles": {
+    "system_roles": {
       "available_actions": ["create", "read", "update", "delete"]
     },
     "brand_users": {

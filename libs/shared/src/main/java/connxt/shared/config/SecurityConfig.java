@@ -2,6 +2,7 @@ package connxt.shared.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import connxt.shared.filter.auth.AccessTokenOncePerRequestFilter;
 import connxt.shared.filter.auth.AuthenticationStrategy;
-import connxt.shared.filter.context.BrandEnvironmentContextFilter;
-import connxt.shared.filter.strategy.RouteFilterStrategyFactory;
 import connxt.shared.filter.web.CorrelationIdWebFilter;
 
 @Configuration
@@ -36,19 +35,16 @@ public class SecurityConfig {
   private final String frontendUrl;
   private final RouteConfig routeConfig;
   private final List<AuthenticationStrategy> authenticationStrategies;
-  private final RouteFilterStrategyFactory routeFilterStrategyFactory;
 
   public SecurityConfig(
       @Value("${api.prefix}") String apiPrefix,
       @Value("${api.frontend-url}") String frontendUrl,
       RouteConfig routeConfig,
-      List<AuthenticationStrategy> authenticationStrategies,
-      RouteFilterStrategyFactory routeFilterStrategyFactory) {
+      List<AuthenticationStrategy> authenticationStrategies) {
     this.apiPrefix = apiPrefix;
     this.frontendUrl = frontendUrl;
     this.routeConfig = routeConfig;
     this.authenticationStrategies = authenticationStrategies;
-    this.routeFilterStrategyFactory = routeFilterStrategyFactory;
   }
 
   @Bean
@@ -75,10 +71,7 @@ public class SecurityConfig {
                     .anyRequest()
                     .authenticated())
         .addFilterAfter(new CorrelationIdWebFilter(), SecurityContextHolderFilter.class)
-        .addFilterAfter(accessTokenOncePerRequestFilter, CorrelationIdWebFilter.class)
-        .addFilterAfter(
-            new BrandEnvironmentContextFilter(routeFilterStrategyFactory),
-            AccessTokenOncePerRequestFilter.class);
+        .addFilterAfter(accessTokenOncePerRequestFilter, CorrelationIdWebFilter.class);
     return http.build();
   }
 
@@ -101,10 +94,19 @@ public class SecurityConfig {
     publicConfiguration.addAllowedHeader("*");
     publicConfiguration.setAllowCredentials(false); // No credentials needed for public endpoints
 
-    // CORS configuration for system-only endpoints (restricted to frontend URLs)
+    // CORS configuration for authenticated endpoints (restricted to frontend URLs)
     CorsConfiguration secureConfiguration = new CorsConfiguration();
-    List<String> allowedOrigins = Arrays.asList(frontendUrl.split(","));
-    secureConfiguration.setAllowedOriginPatterns(allowedOrigins);
+    String configuredFrontend = frontendUrl != null ? frontendUrl : "";
+    List<String> allowedOrigins =
+        Arrays.stream(configuredFrontend.split(","))
+            .map(String::trim)
+            .filter(origin -> !origin.isEmpty())
+            .collect(Collectors.toList());
+    if (allowedOrigins.isEmpty()) {
+      secureConfiguration.addAllowedOriginPattern("*");
+    } else {
+      secureConfiguration.setAllowedOriginPatterns(allowedOrigins);
+    }
     secureConfiguration.setAllowedMethods(Arrays.asList(getAllowedCorsMethods()));
     secureConfiguration.addAllowedHeader("*");
     secureConfiguration.setAllowCredentials(true);
@@ -112,10 +114,12 @@ public class SecurityConfig {
     // Apply public CORS to public paths (CORS free)
     String[] publicPaths = routeConfig.getPublicPaths();
     for (String path : publicPaths) {
-      source.registerCorsConfiguration(path, publicConfiguration);
+      if (path != null && !path.isBlank()) {
+        source.registerCorsConfiguration(path, publicConfiguration);
+      }
     }
 
-    // Apply secure CORS to all other endpoints (system-only paths require JWT)
+    // Apply secure CORS to all other endpoints (require JWT token)
     source.registerCorsConfiguration("/**", secureConfiguration);
 
     return source;

@@ -37,13 +37,13 @@ public class TokenManagementService {
   private final TokenRepository tokenRepository;
 
   @Transactional
-  public void saveToken(JwtTokenResponse tokenResponse, String customerId) {
+  public void saveToken(JwtTokenResponse tokenResponse, String userId) {
     String tokenHash =
-        generateTokenHash(tokenResponse.getToken(), customerId, tokenResponse.getExpiresAt());
+        generateTokenHash(tokenResponse.getToken(), userId, tokenResponse.getExpiresAt());
 
     Token token =
         Token.builder()
-            .customerId(customerId)
+            .customerId(userId) // Using customerId field to store userId for backward compatibility
             .tokenHash(tokenHash)
             .issuedAt(tokenResponse.getIssuedAt())
             .expiresAt(tokenResponse.getExpiresAt())
@@ -57,16 +57,16 @@ public class TokenManagementService {
 
   @Transactional
   public void saveTokens(
-      JwtTokenResponse accessToken, JwtTokenResponse refreshToken, String customerId) {
+      JwtTokenResponse accessToken, JwtTokenResponse refreshToken, String userId) {
     String accessTokenHash =
-        generateTokenHash(accessToken.getToken(), customerId, accessToken.getExpiresAt());
+        generateTokenHash(accessToken.getToken(), userId, accessToken.getExpiresAt());
 
     String refreshTokenHash =
-        generateTokenHash(refreshToken.getToken(), customerId, refreshToken.getExpiresAt());
+        generateTokenHash(refreshToken.getToken(), userId, refreshToken.getExpiresAt());
 
     Token accessTokenEntity =
         Token.builder()
-            .customerId(customerId)
+            .customerId(userId) // Using customerId field to store userId for backward compatibility
             .tokenHash(accessTokenHash)
             .issuedAt(accessToken.getIssuedAt())
             .expiresAt(accessToken.getExpiresAt())
@@ -76,7 +76,7 @@ public class TokenManagementService {
 
     Token refreshTokenEntity =
         Token.builder()
-            .customerId(customerId)
+            .customerId(userId) // Using customerId field to store userId for backward compatibility
             .tokenHash(refreshTokenHash)
             .issuedAt(refreshToken.getIssuedAt())
             .expiresAt(refreshToken.getExpiresAt())
@@ -112,19 +112,22 @@ public class TokenManagementService {
             });
   }
 
-  private String generateTokenHash(String token, String customerId, OffsetDateTime expiresAt) {
+  private String generateTokenHash(String token, String userId, OffsetDateTime expiresAt) {
     OffsetDateTime normalizedExpiresAt =
         expiresAt
             .withOffsetSameInstant(ZoneOffset.UTC)
             .truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
 
     log.debug("Token hash generated");
-    String data = String.format("%s|%s|%s", token, customerId, normalizedExpiresAt.toString());
+    String data = String.format("%s|%s|%s", token, userId, normalizedExpiresAt.toString());
     return TokenUtils.hmacSha256(getBindingKey(), data);
   }
 
   public String generateTokenHashFromToken(String token, String subject) {
     try {
+      if (subject == null) {
+        return null;
+      }
       String[] parts = token.split("\\.");
       if (parts.length == 3) {
         String payload = parts[1];
@@ -165,10 +168,10 @@ public class TokenManagementService {
   }
 
   @Transactional
-  public void revokeRefreshTokensForUser(String customerId) {
+  public void revokeRefreshTokensForUser(String userId) {
     try {
       tokenRepository
-          .findActiveByCustomerIdAndTokenType(customerId, TokenType.REFRESH, TokenStatus.ACTIVE)
+          .findActiveByCustomerIdAndTokenType(userId, TokenType.REFRESH, TokenStatus.ACTIVE)
           .forEach(
               token -> {
                 token.setStatus(TokenStatus.REVOKED);
@@ -176,15 +179,15 @@ public class TokenManagementService {
               });
       log.debug("Refresh tokens revoked for user");
     } catch (Exception e) {
-      log.error("Failed to revoke refresh tokens for user: {}", customerId, e);
+      log.error("Failed to revoke refresh tokens for user: {}", userId, e);
     }
   }
 
   @Transactional
-  public void revokeAllTokensForUser(String customerId) {
+  public void revokeAllTokensForUser(String userId) {
     try {
       tokenRepository
-          .findActiveByCustomerId(customerId, TokenStatus.ACTIVE)
+          .findActiveByCustomerId(userId, TokenStatus.ACTIVE)
           .forEach(
               token -> {
                 token.setStatus(TokenStatus.REVOKED);
@@ -193,15 +196,15 @@ public class TokenManagementService {
               });
       log.info("All tokens revoked for user");
     } catch (Exception e) {
-      log.error("Failed to revoke tokens for user: {}", customerId, e);
+      log.error("Failed to revoke tokens for user: {}", userId, e);
     }
   }
 
   @Transactional
-  public void revokeAccessTokensForUser(String customerId) {
+  public void revokeAccessTokensForUser(String userId) {
     try {
       tokenRepository
-          .findActiveByCustomerIdAndTokenType(customerId, TokenType.ACCESS, TokenStatus.ACTIVE)
+          .findActiveByCustomerIdAndTokenType(userId, TokenType.ACCESS, TokenStatus.ACTIVE)
           .forEach(
               token -> {
                 token.setStatus(TokenStatus.REVOKED);
@@ -210,7 +213,7 @@ public class TokenManagementService {
               });
       log.debug("All access tokens revoked for user");
     } catch (Exception e) {
-      log.error("Failed to revoke access tokens for user: {}", customerId, e);
+      log.error("Failed to revoke access tokens for user: {}", userId, e);
     }
   }
 
@@ -271,12 +274,12 @@ public class TokenManagementService {
   }
 
   @Transactional
-  public void cleanupExpiredTokensForUser(String customerId) {
+  public void cleanupExpiredTokensForUser(String userId) {
     try {
       OffsetDateTime now = OffsetDateTime.now();
       List<Token> expiredTokens =
           tokenRepository.findExpiredTokens(now, TokenStatus.ACTIVE).stream()
-              .filter(token -> customerId.equals(token.getCustomerId()))
+              .filter(token -> userId.equals(token.getCustomerId()))
               .toList();
 
       if (!expiredTokens.isEmpty()) {
@@ -288,7 +291,7 @@ public class TokenManagementService {
         log.debug("Expired tokens cleaned up for user");
       }
     } catch (Exception e) {
-      log.error("Failed to cleanup expired tokens for user: {}", customerId, e);
+      log.error("Failed to cleanup expired tokens for user: {}", userId, e);
     }
   }
 }

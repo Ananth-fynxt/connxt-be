@@ -13,9 +13,13 @@ public class AuditorAwareImpl implements AuditorAware<String> {
   @Override
   @NonNull
   public Optional<String> getCurrentAuditor() {
-    return Optional.ofNullable(
-        SecurityContextHolder.getContext().getAuthentication() != null
-            ? SecurityContextHolder.getContext().getAuthentication().getName()
-            : "system");
+    String auditor =
+        Optional.ofNullable(SecurityContextHolder.getContext())
+            .map(context -> context.getAuthentication())
+            .map(authentication -> authentication.getName())
+            .filter(name -> name != null && !name.isBlank())
+            .orElse("system");
+
+    return Optional.of(auditor);
   }
 }
