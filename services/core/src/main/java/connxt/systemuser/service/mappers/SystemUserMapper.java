@@ -14,7 +14,7 @@ public class SystemUserMapper {
         .name(entity.getName())
         .email(entity.getEmail())
         .userId(entity.getUserId())
-        .systemRoleId(entity.getSystemRoleId())
+        .role(entity.getRole())
         .scope(entity.getScope())
         .status(entity.getStatus())
         .createdAt(entity.getCreatedAt())
@@ -28,7 +28,7 @@ public class SystemUserMapper {
         .name(dto.getName())
         .email(dto.getEmail())
         .userId(dto.getUserId())
-        .systemRoleId(dto.getSystemRoleId())
+        .role(dto.getRole())
         .scope(dto.getScope())
         .status(dto.getStatus())
         .build();

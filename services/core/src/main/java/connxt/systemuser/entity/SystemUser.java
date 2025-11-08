@@ -2,6 +2,7 @@ package connxt.systemuser.entity;
 
 import org.hibernate.annotations.Type;
 
+import connxt.shared.constants.RoleType;
 import connxt.shared.constants.Scope;
 import connxt.shared.constants.UserStatus;
 import connxt.shared.db.AuditingEntity;
@@ -39,8 +40,15 @@ public class SystemUser extends AuditingEntity {
   @Column(name = "user_id")
   private String userId;
 
-  @Column(name = "system_role_id", nullable = false)
-  private String systemRoleId;
+  @Type(
+      value = PostgreSQLEnumType.class,
+      parameters =
+          @org.hibernate.annotations.Parameter(
+              name = "enumClass",
+              value = "connxt.shared.constants.RoleType"))
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false, columnDefinition = "role_type")
+  private RoleType role;
 
   @Type(
       value = PostgreSQLEnumType.class,

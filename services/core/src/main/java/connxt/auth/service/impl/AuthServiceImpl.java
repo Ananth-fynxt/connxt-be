@@ -167,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
     claims.put("scope", user.getScope().getValue());
     claims.put("token_type", TokenType.ACCESS.getValue());
     claims.put("email", user.getEmail());
-    claims.put("roleId", user.getRoleId());
+    claims.put("role", user.getRole().getValue());
     return claims;
   }
 

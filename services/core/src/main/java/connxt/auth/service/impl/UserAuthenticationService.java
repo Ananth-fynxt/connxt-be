@@ -47,7 +47,7 @@ public class UserAuthenticationService {
         .scope(Scope.SYSTEM)
         .status(systemUserDto.getStatus())
         .authType("INTERNAL")
-        .roleId(systemUserDto.getSystemRoleId())
+        .role(systemUserDto.getRole())
         .build();
   }
 

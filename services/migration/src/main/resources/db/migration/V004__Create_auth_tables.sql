@@ -1,5 +1,5 @@
 -- Migration: V010__Create_auth_tables.sql
--- Description: Create authentication tables (brand_users, system_roles)
+-- Description: Create authentication tables (brand_users)
 
 -- Create tokens table
 CREATE TABLE tokens (

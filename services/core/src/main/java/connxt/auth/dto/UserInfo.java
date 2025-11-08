@@ -1,5 +1,6 @@
 package connxt.auth.dto;
 
+import connxt.shared.constants.RoleType;
 import connxt.shared.constants.Scope;
 import connxt.shared.constants.UserStatus;
 
@@ -19,5 +20,5 @@ public class UserInfo {
   private Scope scope;
   private UserStatus status;
   private String authType;
-  private String roleId;
+  private RoleType role;
 }

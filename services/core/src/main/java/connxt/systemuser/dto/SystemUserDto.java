@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import connxt.shared.constants.RoleType;
 import connxt.shared.constants.Scope;
 import connxt.shared.constants.UserStatus;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -28,8 +30,8 @@ public class SystemUserDto {
 
   private String userId;
 
-  @NotBlank(message = "System Role ID is required")
-  private String systemRoleId;
+  @NotNull(message = "Role is required")
+  private RoleType role;
 
   @Builder.Default private Scope scope = Scope.SYSTEM;
 

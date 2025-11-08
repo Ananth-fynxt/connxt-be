@@ -5,6 +5,9 @@
 -- Create scope enum for system vs brand level permissions
 CREATE TYPE scope AS ENUM ('SYSTEM', 'BRAND');
 
+-- Create role_type enum for system vs brand level permissions
+CREATE TYPE role_type AS ENUM ('ADMIN', 'MANAGER', 'VIEWER');
+
 -- Create status enum for enabled/disabled states
 CREATE TYPE status AS ENUM ('ENABLED', 'DISABLED');
 

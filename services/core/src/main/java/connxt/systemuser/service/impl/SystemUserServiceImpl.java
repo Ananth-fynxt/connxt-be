@@ -113,7 +113,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     existingUser.setName(dto.getName());
     existingUser.setEmail(dto.getEmail());
-    existingUser.setSystemRoleId(dto.getSystemRoleId());
+    existingUser.setRole(dto.getRole());
     existingUser.setStatus(dto.getStatus());
 
     SystemUser updatedUser = systemUserRepository.save(existingUser);
