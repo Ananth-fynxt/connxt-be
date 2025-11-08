@@ -9,12 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import connxt.shared.builder.dto.ApiResponse;
 import connxt.shared.builder.impl.ResponseBuilderImpl;
 import connxt.shared.constants.ErrorCode;
-import connxt.shared.exception.RoleNotFoundException;
 import connxt.shared.exception.TransactionException;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -39,13 +35,6 @@ public class GlobalExceptionHandler {
     ErrorCode errorCode = getErrorCodeFromCode(String.valueOf(ex.code()));
     HttpStatus httpStatus = ex.category().http();
     return responseBuilder.errorResponse(errorCode, httpStatus.getReasonPhrase(), httpStatus);
-  }
-
-  @ExceptionHandler(RoleNotFoundException.class)
-  public ResponseEntity<ApiResponse<Object>> handleRoleNotFoundException(RoleNotFoundException ex) {
-    log.error("Role not found: {}", ex.getMessage());
-    return responseBuilder.errorResponse(
-        ErrorCode.ROLE_NOT_FOUND, ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler(Exception.class)

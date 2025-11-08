@@ -26,7 +26,6 @@ spotless = "6.25.0"
 spring-doc = "2.8.8"
 mapstruct = "1.6.3"
 hypersistence = "3.10.3"
-json-logic = "1.0.1"
 
 # =============================================================================
 # EMAIL SERVICE VERSIONS
@@ -44,12 +43,6 @@ caffeine = "3.1.8"
 aspectj = "1.9.21"
 
 [libraries]
-# =============================================================================
-# RULE ENGINE (Versions managed by BOM if compatible, otherwise explicit in build.gradle.kts)
-# =============================================================================
-json-logic = { module = "io.github.jamsesso:json-logic-java", version.ref = "json-logic" }
-
-# =============================================================================
 # SPRING BOOT BOM & STARTERS (Versions managed by BOM)
 # =============================================================================
 spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }

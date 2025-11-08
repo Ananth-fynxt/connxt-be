@@ -35,10 +35,6 @@ dependencies {
     
     // Email Service
     api(libs.azure.communication.services.email)
-
-    // Rule Engine
-    implementation(libs.json.logic)
-    
     // JWT Processing
 
     // Netty DNS Resolver for macOS - fixes DNS resolution issues on macOS
