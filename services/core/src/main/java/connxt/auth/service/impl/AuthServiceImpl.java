@@ -3,6 +3,7 @@ package connxt.auth.service.impl;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -167,7 +168,7 @@ public class AuthServiceImpl implements AuthService {
     claims.put("scope", user.getScope().getValue());
     claims.put("token_type", TokenType.ACCESS.getValue());
     claims.put("email", user.getEmail());
-    claims.put("role", user.getRole().getValue());
+    claims.put("roles", List.of(user.getRole().getValue()));
     return claims;
   }
 

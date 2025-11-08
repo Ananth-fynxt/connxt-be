@@ -2,6 +2,8 @@ package connxt.shared.builder.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,6 +37,14 @@ public class GlobalExceptionHandler {
     ErrorCode errorCode = getErrorCodeFromCode(String.valueOf(ex.code()));
     HttpStatus httpStatus = ex.category().http();
     return responseBuilder.errorResponse(errorCode, httpStatus.getReasonPhrase(), httpStatus);
+  }
+
+  @ExceptionHandler({AuthorizationDeniedException.class, AccessDeniedException.class})
+  public ResponseEntity<ApiResponse<Object>> handleAccessDenied(Exception ex) {
+    return responseBuilder.errorResponse(
+        ErrorCode.AUTH_INSUFFICIENT_PERMISSIONS,
+        ErrorCode.AUTH_INSUFFICIENT_PERMISSIONS.getMessage(),
+        HttpStatus.FORBIDDEN);
   }
 
   @ExceptionHandler(Exception.class)

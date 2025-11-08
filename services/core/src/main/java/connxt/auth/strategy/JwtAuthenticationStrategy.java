@@ -1,8 +1,12 @@
 package connxt.auth.strategy;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -130,14 +134,54 @@ public class JwtAuthenticationStrategy implements AuthenticationStrategy {
   }
 
   private void setSpringSecurityContext(Map<String, Object> claims, String subject) {
-    // Set minimal authentication context at JWT validation stage
-    List<SimpleGrantedAuthority> authorities =
-        List.of(new SimpleGrantedAuthority("ROLE_AUTHENTICATED"));
+    Set<SimpleGrantedAuthority> resolvedAuthorities = new LinkedHashSet<>();
+
+    Object rolesClaim = claims.get("roles");
+    if (rolesClaim instanceof Collection<?> collection) {
+      for (Object entry : collection) {
+        if (entry instanceof String value && !value.isBlank()) {
+          resolvedAuthorities.add(createAuthority(value));
+        }
+      }
+    } else if (rolesClaim instanceof String value) {
+      parseRolesString(value, resolvedAuthorities);
+    }
+
+    if (resolvedAuthorities.isEmpty()) {
+      resolvedAuthorities.add(new SimpleGrantedAuthority("ROLE_AUTHENTICATED"));
+    }
 
     UsernamePasswordAuthenticationToken authentication =
-        new UsernamePasswordAuthenticationToken(subject, null, authorities);
+        new UsernamePasswordAuthenticationToken(
+            subject, null, new ArrayList<>(resolvedAuthorities));
+    authentication.setDetails(claims);
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
+
+  private SimpleGrantedAuthority createAuthority(String role) {
+    String normalizedRole = role.trim().toUpperCase();
+    if (!normalizedRole.startsWith("ROLE_")) {
+      normalizedRole = "ROLE_" + normalizedRole;
+    }
+    return new SimpleGrantedAuthority(normalizedRole);
+  }
+
+  private void parseRolesString(
+      String rolesValue, Set<SimpleGrantedAuthority> resolvedAuthorities) {
+    String trimmed = rolesValue.trim();
+    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+      trimmed = trimmed.substring(1, trimmed.length() - 1);
+    }
+    if (trimmed.isBlank()) {
+      return;
+    }
+
+    Arrays.stream(trimmed.split(","))
+        .map(token -> token.replace("\"", "").trim())
+        .filter(token -> !token.isEmpty())
+        .map(this::createAuthority)
+        .forEach(resolvedAuthorities::add);
   }
 
   private boolean isAccessTokenActiveInDatabase(String token, String subject) {
