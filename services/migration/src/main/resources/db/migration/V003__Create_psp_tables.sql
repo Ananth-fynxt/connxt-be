@@ -24,8 +24,6 @@ CREATE TABLE psp_operations (
     psp_id TEXT NOT NULL REFERENCES psps(id),
     flow_action_id TEXT NOT NULL REFERENCES flow_actions(id),
     flow_definition_id TEXT NOT NULL REFERENCES flow_definitions(id),
-    currencies TEXT[],
-    countries TEXT[],
     status status NOT NULL DEFAULT 'ENABLED',
     PRIMARY KEY (psp_id, flow_action_id, flow_definition_id)
 );

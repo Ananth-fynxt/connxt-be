@@ -10,11 +10,15 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import connxt.flowtarget.dto.FlowTargetDto;
-import connxt.psp.dto.*;
+import connxt.psp.dto.PspDetailsDto;
+import connxt.psp.dto.PspDto;
+import connxt.psp.dto.PspSummaryDto;
+import connxt.psp.dto.UpdatePspDto;
 import connxt.psp.entity.MaintenanceWindow;
 import connxt.psp.entity.Psp;
 import connxt.psp.entity.PspOperation;
 import connxt.shared.db.mappers.MapperCoreConfig;
+import connxt.shared.dto.IdNameDto;
 
 /**
  * MapStruct mapper for PSP entity conversions Uses MapperCoreConfig and CommonMappingUtil for
@@ -50,23 +54,11 @@ public interface PspMapper {
   @Mapping(target = "endAt", source = "dto.endAt", qualifiedByName = "stringToLocalDateTime")
   MaintenanceWindow toMaintenanceWindow(UpdatePspDto.MaintenanceWindowDto dto, String pspId);
 
-  //    @Mapping(target = "brandId", source = "brandId")
   @Mapping(target = "pspId", source = "pspId")
   @Mapping(target = "flowActionId", source = "dto.flowActionId")
   @Mapping(target = "flowDefinitionId", source = "dto.flowDefinitionId")
   @Mapping(target = "status", source = "dto.status")
-  @Mapping(target = "currencies", source = "dto.currencies")
-  @Mapping(target = "countries", source = "dto.countries")
-  PspOperation toPspOperation(
-      UpdatePspDto.PspOperationDto dto, String brandId, String environmentId, String pspId);
-
-  @org.mapstruct.Named("extractCurrencies")
-  default List<String> extractCurrencies(List<UpdatePspDto.CurrencyDto> currencyDtos) {
-    if (currencyDtos == null) {
-      return List.of();
-    }
-    return currencyDtos.stream().map(UpdatePspDto.CurrencyDto::getCurrency).toList();
-  }
+  PspOperation toPspOperation(UpdatePspDto.PspOperationDto dto, String pspId);
 
   // PspDetailsDto mapping methods
   @Mapping(target = "id", source = "psp.id")
@@ -90,15 +82,11 @@ public interface PspMapper {
   @Mapping(target = "flowActionId", source = "flowActionId")
   @Mapping(target = "flowDefinitionId", source = "flowDefinitionId")
   @Mapping(target = "status", source = "status")
-  @Mapping(target = "currencies", source = "currencies")
   PspDetailsDto.PspOperationDto toPspOperationDto(PspOperation operation);
 
   @Mapping(target = "id", source = "id")
   @Mapping(target = "credentialSchema", source = "credentialSchema")
   @Mapping(target = "flowTypeId", source = "flowTypeId")
-  @Mapping(target = "currencies", source = "currencies")
-  @Mapping(target = "countries", source = "countries")
-  @Mapping(target = "paymentMethods", source = "paymentMethods")
   @Mapping(target = "supportedActions", source = "supportedActions")
   PspDetailsDto.FlowTargetInfo toFlowTargetInfo(FlowTargetDto flowTargetDto);
 
@@ -107,14 +95,6 @@ public interface PspMapper {
   @Mapping(target = "flowActionName", source = "flowActionName")
   PspDetailsDto.SupportedActionInfo toSupportedActionInfo(
       FlowTargetDto.SupportedActionInfo supportedActionInfo);
-
-  @org.mapstruct.Named("stringArrayToList")
-  default List<String> stringArrayToList(String[] stringArray) {
-    if (stringArray == null) {
-      return List.of();
-    }
-    return List.of(stringArray);
-  }
 
   @org.mapstruct.Named("stringToLocalDateTime")
   default LocalDateTime stringToLocalDateTime(String dateTimeString) {

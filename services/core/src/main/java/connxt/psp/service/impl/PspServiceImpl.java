@@ -1,7 +1,10 @@
 package connxt.psp.service.impl;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +13,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import connxt.flowtarget.dto.FlowTargetDto;
 import connxt.flowtarget.service.FlowTargetService;
-import connxt.psp.dto.*;
+import connxt.psp.dto.PspDetailsDto;
+import connxt.psp.dto.PspDto;
+import connxt.psp.dto.PspSummaryDto;
+import connxt.psp.dto.UpdatePspDto;
 import connxt.psp.entity.MaintenanceWindow;
 import connxt.psp.entity.Psp;
 import connxt.psp.entity.PspOperation;
@@ -21,6 +27,7 @@ import connxt.psp.service.PspService;
 import connxt.psp.service.mappers.PspMapper;
 import connxt.shared.constants.ErrorCode;
 import connxt.shared.constants.Status;
+import connxt.shared.dto.IdNameDto;
 import connxt.shared.service.NameUniquenessService;
 import connxt.shared.util.CryptoUtil;
 
@@ -88,17 +95,6 @@ public class PspServiceImpl implements PspService {
   }
 
   @Override
-  public List<PspSummaryDto> getByBrandAndEnvironmentByStatusAndCurrencyAndFlowAction(
-      String brandId, String environmentId, String status, String currency, String flowActionId) {
-    return pspRepository
-        .findByBrandEnvStatusCurrencyAndFlowAction(
-            brandId, environmentId, status, currency, flowActionId)
-        .stream()
-        .map(pspMapper::toPspSummaryDto)
-        .toList();
-  }
-
-  @Override
   public List<PspSummaryDto> getByBrandAndEnvironmentByStatusAndFlowAction(
       String brandId, String environmentId, String status, String flowActionId) {
     return pspRepository
@@ -109,22 +105,10 @@ public class PspServiceImpl implements PspService {
   }
 
   @Override
-  public List<String> getSupportedCurrenciesByBrandAndEnvironment(
-      String brandId, String environmentId) {
-    return pspRepository.findSupportedCurrenciesByBrandAndEnvironment(brandId, environmentId);
-  }
-
-  @Override
-  public List<String> getSupportedCountriesByBrandAndEnvironment(
-      String brandId, String environmentId) {
-    return pspRepository.findSupportedCountriesByBrandAndEnvironment(brandId, environmentId);
-  }
-
-  @Override
   @Transactional
   public PspDetailsDto update(String pspId, UpdatePspDto pspDto) {
     Psp existingPsp = getPspIfExists(pspId);
-    validateCredentialsCountriesAndCurrencies(pspDto, existingPsp);
+    validateCredentials(pspDto, existingPsp);
 
     // Validate name uniqueness for update (exclude current PSP)
     nameUniquenessService.validateForUpdateWithFlowContext(
@@ -171,12 +155,7 @@ public class PspServiceImpl implements PspService {
     }
 
     List<PspOperation> pspOperations =
-        operations.stream()
-            .map(
-                dto ->
-                    pspMapper.toPspOperation(
-                        dto, pspDto.getBrandId(), pspDto.getEnvironmentId(), pspId))
-            .toList();
+        operations.stream().map(dto -> pspMapper.toPspOperation(dto, pspId)).toList();
     return pspOperationRepository.saveAll(pspOperations);
   }
 
@@ -185,39 +164,14 @@ public class PspServiceImpl implements PspService {
     pspOperationRepository.deleteByPspId(pspId);
   }
 
-  private void validateCredentialsCountriesAndCurrencies(UpdatePspDto pspDto, Psp existingPsp) {
+  private void validateCredentials(UpdatePspDto pspDto, Psp existingPsp) {
+    if (StringUtils.isBlank(pspDto.getCredential())) {
+      return;
+    }
+
     String flowTargetId =
         pspDto.getFlowTargetId() != null ? pspDto.getFlowTargetId() : existingPsp.getFlowTargetId();
-    List<String> currencies = extractCurrenciesFromOperations(pspDto.getOperations());
-    List<String> countries = extractCountriesFromOperations(pspDto.getOperations());
-    flowTargetService.validateCredentialsCurrenciesAndCountries(
-        flowTargetId, pspDto.getCredential(), currencies, countries);
-  }
-
-  private List<String> extractCurrenciesFromOperations(
-      List<UpdatePspDto.PspOperationDto> operations) {
-    if (operations == null) {
-      return List.of();
-    }
-
-    Set<String> currencies = new HashSet<>();
-    for (UpdatePspDto.PspOperationDto operation : operations) {
-      currencies.addAll(operation.getCurrencies());
-    }
-    return new ArrayList<>(currencies);
-  }
-
-  private List<String> extractCountriesFromOperations(
-      List<UpdatePspDto.PspOperationDto> operations) {
-    if (operations == null) {
-      return List.of();
-    }
-
-    return operations.stream()
-        .filter(operation -> operation.getCountries() != null)
-        .flatMap(operation -> operation.getCountries().stream())
-        .distinct()
-        .toList();
+    flowTargetService.validateCredentialsForFlowTarget(flowTargetId, pspDto.getCredential());
   }
 
   @Override

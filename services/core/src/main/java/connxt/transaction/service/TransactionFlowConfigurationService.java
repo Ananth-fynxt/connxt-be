@@ -2,20 +2,23 @@ package connxt.transaction.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import connxt.flowaction.entity.FlowAction;
+import connxt.flowaction.repository.FlowActionRepository;
 import connxt.flowdefinition.entity.FlowDefinition;
 import connxt.flowdefinition.repository.FlowDefinitionRepository;
 import connxt.transaction.config.TransactionFlowConfigurationProperties;
@@ -31,9 +34,9 @@ public class TransactionFlowConfigurationService {
 
   @Autowired private FlowDefinitionRepository flowDefinitionRepository;
 
-  @Autowired private ObjectMapper objectMapper;
-
   @Autowired private TransactionFlowConfigurationProperties properties;
+
+  @Autowired private FlowActionRepository flowActionRepository;
 
   private Cache<String, List<TransactionStatus>> nextStatusCache;
 
@@ -61,11 +64,11 @@ public class TransactionFlowConfigurationService {
         key -> {
           logger.debug("Loading next statuses from database for key: {}", key);
 
-          Optional<FlowDefinition> flowDefinition =
+          Optional<FlowDefinition> flowDefinitionOptional =
               flowDefinitionRepository.findByFlowTargetIdAndFlowActionId(
                   flowTargetId, flowActionId);
 
-          if (flowDefinition.isEmpty() || flowDefinition.get().getFlowConfiguration() == null) {
+          if (flowDefinitionOptional.isEmpty()) {
             logger.warn(
                 "No flow definition found for target: {} and action: {}",
                 flowTargetId,
@@ -73,29 +76,15 @@ public class TransactionFlowConfigurationService {
             return Collections.emptyList();
           }
 
-          try {
-            JsonNode flowConfig = flowDefinition.get().getFlowConfiguration();
-            JsonNode currentStatusNode = flowConfig.get(currentStatus.name());
-
-            if (currentStatusNode == null || !currentStatusNode.isArray()) {
-              logger.debug(
-                  "No valid next statuses found for status: {} in PSP: {} and transaction type: {}",
-                  currentStatus,
-                  flowTargetId,
-                  flowActionId);
-              return Collections.emptyList();
-            }
-
-            return objectMapper.readValue(
-                currentStatusNode.toString(), new TypeReference<List<TransactionStatus>>() {});
-          } catch (Exception e) {
-            logger.error(
-                "Failed to parse next statuses from JSONB for target: {} and action: {}",
-                flowTargetId,
-                flowActionId,
-                e);
-            throw new RuntimeException("Failed to parse next statuses from JSONB", e);
+          FlowDefinition flowDefinition = flowDefinitionOptional.get();
+          List<TransactionStatus> fromConfiguration =
+              deriveNextStatusesFromConfiguration(
+                  flowDefinition.getFlowConfiguration(), currentStatus);
+          if (!fromConfiguration.isEmpty()) {
+            return fromConfiguration;
           }
+
+          return deriveNextStatusesFromAction(flowActionId, currentStatus);
         });
   }
 
@@ -156,5 +145,65 @@ public class TransactionFlowConfigurationService {
   public void invalidateAllCache() {
     nextStatusCache.invalidateAll();
     logger.info("Invalidated all cache entries");
+  }
+
+  private List<TransactionStatus> deriveNextStatusesFromConfiguration(
+      JsonNode flowConfiguration, TransactionStatus currentStatus) {
+    if (flowConfiguration == null || flowConfiguration.isNull()) {
+      return Collections.emptyList();
+    }
+
+    JsonNode currentStatusNode = flowConfiguration.get(currentStatus.name());
+    if (currentStatusNode == null || !currentStatusNode.isArray()) {
+      return Collections.emptyList();
+    }
+
+    List<TransactionStatus> statuses = new java.util.ArrayList<>(currentStatusNode.size());
+    currentStatusNode.forEach(
+        node -> {
+          if (node.isTextual()) {
+            toTransactionStatus(node.asText()).ifPresent(statuses::add);
+          }
+        });
+    return statuses;
+  }
+
+  private List<TransactionStatus> deriveNextStatusesFromAction(
+      String flowActionId, TransactionStatus currentStatus) {
+    Optional<FlowAction> flowActionOptional = flowActionRepository.findById(flowActionId);
+    if (flowActionOptional.isEmpty()) {
+      logger.warn("Flow action {} not found while deriving next statuses", flowActionId);
+      return Collections.emptyList();
+    }
+
+    FlowAction flowAction = flowActionOptional.get();
+    if (flowAction.getSteps() == null || flowAction.getSteps().isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    List<TransactionStatus> statusSequence =
+        flowAction.getSteps().stream()
+            .map(this::toTransactionStatus)
+            .flatMap(Optional::stream)
+            .collect(Collectors.toList());
+
+    int currentIndex = statusSequence.indexOf(currentStatus);
+    if (currentIndex == -1 || currentIndex == statusSequence.size() - 1) {
+      return Collections.emptyList();
+    }
+
+    return statusSequence.subList(currentIndex + 1, statusSequence.size());
+  }
+
+  private Optional<TransactionStatus> toTransactionStatus(String value) {
+    if (!StringUtils.hasText(value)) {
+      return Optional.empty();
+    }
+    try {
+      return Optional.of(TransactionStatus.valueOf(value.trim().toUpperCase(Locale.ROOT)));
+    } catch (IllegalArgumentException ex) {
+      logger.warn("Unsupported transaction status '{}' defined in flow action", value);
+      return Optional.empty();
+    }
   }
 }

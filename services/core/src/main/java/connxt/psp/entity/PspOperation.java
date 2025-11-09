@@ -1,7 +1,5 @@
 package connxt.psp.entity;
 
-import java.util.List;
-
 import org.hibernate.annotations.Type;
 
 import connxt.shared.constants.Status;
@@ -21,10 +19,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "psp_operations")
 @IdClass(PspOperationId.class)
 public class PspOperation {
-
-  //  @Id
-  //  @Column(name = "brand_id")
-  //  private String brandId;
 
   @Id
   @Column(name = "psp_id")
@@ -48,10 +42,4 @@ public class PspOperation {
   @Column(name = "status", nullable = false, columnDefinition = "status")
   @Builder.Default
   private Status status = Status.ENABLED;
-
-  @Column(name = "currencies", columnDefinition = "text[]")
-  private List<String> currencies;
-
-  @Column(name = "countries", columnDefinition = "text[]")
-  private List<String> countries;
 }

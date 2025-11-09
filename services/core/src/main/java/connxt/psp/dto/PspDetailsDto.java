@@ -71,8 +71,6 @@ public class PspDetailsDto {
     private String flowActionId;
     private String flowDefinitionId;
     private Status status;
-    private List<String> currencies;
-    private List<String> countries;
   }
 
   @Data
@@ -93,9 +91,6 @@ public class PspDetailsDto {
     private String id;
     private String credentialSchema;
     private String flowTypeId;
-    private List<String> currencies;
-    private List<String> countries;
-    private List<String> paymentMethods;
     private List<SupportedActionInfo> supportedActions;
   }
 }

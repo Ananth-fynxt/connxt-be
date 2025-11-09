@@ -11,6 +11,7 @@ connxt-backend/
 ├── gradle/                            # Gradle configuration and wrapper
 │   └── libs.versions.toml             # Dependency version management
 ├── libs/                              # Shared reusable libraries
+│   ├── flow/                          # Flow domain (actions, types, targets, definitions)
 │   ├── integration/                   # External service integration
 │   └── shared/                        # Shared components (SecurityConfig, constants, utils, config)
 ├── services/                          # Service modules
@@ -30,6 +31,10 @@ connxt-backend/
 ├── build.gradle.kts                   # Main build configuration
 └── README.md                          # This file
 ```
+
+### Flow Library
+
+The `libs/flow` module encapsulates all flow domain concerns (actions, types, targets, definitions). When the module is added to a Spring Boot application it auto-configures itself (via `FlowAutoConfiguration`), registers the underlying repositories/services, and ensures the required flow tables exist (creating them if they are missing). No default data is seeded; consumers own the lifecycle of flow records and interact with the engine directly through the provided service interfaces—no REST controllers are required.
 
 ## 🚀 Quick Start
 

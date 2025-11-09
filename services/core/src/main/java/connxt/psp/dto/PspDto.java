@@ -1,6 +1,5 @@
 package connxt.psp.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,8 +8,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import connxt.shared.constants.Status;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -30,9 +32,7 @@ public class PspDto {
   @NotBlank(message = "Credential is required")
   private String credential;
 
-  @Positive(message = "Timeout must be greater than 0")
-  @Builder.Default
-  private Integer timeout = 300;
+  @Builder.Default private Integer timeout = 300;
 
   @Builder.Default private boolean blockVpnAccess = false;
 
@@ -40,10 +40,8 @@ public class PspDto {
 
   @Builder.Default private Boolean failureRate = false;
 
-  @Positive(message = "Failure rate threshold must be greater than 0")
   private Integer failureRateThreshold;
 
-  @Positive(message = "Failure rate duration minutes must be greater than 0")
   private Integer failureRateDurationMinutes;
 
   private List<String> ipAddress;
@@ -95,29 +93,12 @@ public class PspDto {
   @Builder
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class CurrencyDto {
-    private String flowActionId;
-
-    private String currency;
-
-    private BigDecimal minValue;
-
-    private BigDecimal maxValue;
-  }
-
-  @Getter
-  @Setter
-  @Builder
-  @NoArgsConstructor
-  @AllArgsConstructor
   public static class PspOperationDto {
     private String flowActionId;
 
     private String flowDefinitionId;
 
     private Status status;
-
-    private List<CurrencyDto> currencies;
   }
 
   @Getter
@@ -143,11 +124,7 @@ public class PspDto {
 
     private String credentialSchema;
 
-    private String flowTargetName;
-
     private String flowTypeId;
-
-    private List<String> supportedCurrencies;
 
     private List<SupportedActionInfo> supportedActions;
   }

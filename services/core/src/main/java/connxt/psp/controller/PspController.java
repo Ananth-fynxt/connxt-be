@@ -43,19 +43,6 @@ public class PspController {
         pspService.getByBrandAndEnvironment(brandId, environmentId));
   }
 
-  @GetMapping("/brand/{brandId}/environment/{environmentId}/{flowActionId}/{status}/{currency}")
-  public ResponseEntity<ApiResponse<Object>>
-      getByBrandAndEnvironmentByStatusAndCurrencyAndFlowAction(
-          @Validated @PathVariable @NotBlank String brandId,
-          @Validated @PathVariable @NotBlank String environmentId,
-          @Validated @PathVariable @NotBlank String flowActionId,
-          @Validated @PathVariable @NotBlank String status,
-          @Validated @PathVariable @NotBlank String currency) {
-    return responseBuilder.successResponse(
-        pspService.getByBrandAndEnvironmentByStatusAndCurrencyAndFlowAction(
-            brandId, environmentId, status, currency, flowActionId));
-  }
-
   @GetMapping("/brand/{brandId}/environment/{environmentId}/{flowActionId}/{status}")
   public ResponseEntity<ApiResponse<Object>> getByBrandAndEnvironmentByStatusAndFlowAction(
       @Validated @PathVariable @NotBlank String brandId,
@@ -65,22 +52,6 @@ public class PspController {
     return responseBuilder.successResponse(
         pspService.getByBrandAndEnvironmentByStatusAndFlowAction(
             brandId, environmentId, status, flowActionId));
-  }
-
-  @GetMapping("/brand/{brandId}/environment/{environmentId}/currencies")
-  public ResponseEntity<ApiResponse<Object>> getSupportedCurrenciesByBrandAndEnvironment(
-      @Validated @PathVariable @NotBlank String brandId,
-      @Validated @PathVariable @NotBlank String environmentId) {
-    return responseBuilder.successResponse(
-        pspService.getSupportedCurrenciesByBrandAndEnvironment(brandId, environmentId));
-  }
-
-  @GetMapping("/brand/{brandId}/environment/{environmentId}/countries")
-  public ResponseEntity<ApiResponse<Object>> getSupportedCountriesByBrandAndEnvironment(
-      @Validated @PathVariable @NotBlank String brandId,
-      @Validated @PathVariable @NotBlank String environmentId) {
-    return responseBuilder.successResponse(
-        pspService.getSupportedCountriesByBrandAndEnvironment(brandId, environmentId));
   }
 
   @PutMapping("/{pspId}")

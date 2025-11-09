@@ -1,6 +1,5 @@
 package connxt.psp.dto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import connxt.shared.constants.Status;
@@ -57,17 +56,5 @@ public class UpdatePspDto {
     private String flowActionId;
     private String flowDefinitionId;
     private Status status;
-    @Valid private List<String> currencies;
-    @Valid private List<String> countries;
-  }
-
-  @Data
-  @Builder
-  @NoArgsConstructor
-  @AllArgsConstructor
-  public static class CurrencyDto {
-    private String currency;
-    private BigDecimal minValue;
-    private BigDecimal maxValue;
   }
 }

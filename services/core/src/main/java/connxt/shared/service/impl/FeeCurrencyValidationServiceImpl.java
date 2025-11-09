@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import connxt.flowtarget.repository.FlowTargetRepository;
 import connxt.psp.repository.PspRepository;
 import connxt.psp.repository.SupportedCurrencyRepository;
 import connxt.shared.service.FeeCurrencyValidationService;
@@ -21,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class FeeCurrencyValidationServiceImpl implements FeeCurrencyValidationService {
 
   private final SupportedCurrencyRepository supportedCurrencyRepository;
-  private final FlowTargetRepository flowTargetRepository;
   private final PspRepository pspRepository;
 
   @Override
@@ -65,22 +63,7 @@ public class FeeCurrencyValidationServiceImpl implements FeeCurrencyValidationSe
    * this context.
    */
   private Boolean checkCurrencyInFlowTargets(String currency, String pspId) {
-    return pspRepository
-        .findById(pspId)
-        .map(
-            psp ->
-                flowTargetRepository
-                    .findById(psp.getFlowTargetId())
-                    .map(
-                        flowTarget -> {
-                          List<String> currencies = flowTarget.getCurrencies();
-                          if (currencies != null && !currencies.isEmpty()) {
-                            return currencies.contains(currency);
-                          }
-                          return false;
-                        })
-                    .orElse(false))
-        .orElse(false);
+    return pspRepository.findById(pspId).isPresent();
   }
 
   @Override

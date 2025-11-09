@@ -5,6 +5,7 @@ import java.util.Map;
 
 import connxt.psp.dto.*;
 import connxt.psp.entity.Psp;
+import connxt.shared.dto.IdNameDto;
 
 public interface PspService {
 
@@ -16,15 +17,8 @@ public interface PspService {
 
   List<PspSummaryDto> getByBrandAndEnvironment(String brandId, String environmentId);
 
-  List<PspSummaryDto> getByBrandAndEnvironmentByStatusAndCurrencyAndFlowAction(
-      String brandId, String environmentId, String status, String currency, String flowActionId);
-
   List<PspSummaryDto> getByBrandAndEnvironmentByStatusAndFlowAction(
       String brandId, String environmentId, String status, String flowActionId);
-
-  List<String> getSupportedCurrenciesByBrandAndEnvironment(String brandId, String environmentId);
-
-  List<String> getSupportedCountriesByBrandAndEnvironment(String brandId, String environmentId);
 
   Psp getPspIfEnabled(String pspId);
 

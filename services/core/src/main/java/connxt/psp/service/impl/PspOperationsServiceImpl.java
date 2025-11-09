@@ -1,7 +1,5 @@
 package connxt.psp.service.impl;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,22 +22,16 @@ public class PspOperationsServiceImpl implements PspOperationsService {
   private final PspOperationRepository pspOperationRepository;
   private final PspMapper pspMapper;
 
-  public boolean validateByPspIdsAndFlowActionIdAndCurrency(
-      List<String> pspIds, String flowActionId, String currency) {
-    long recordCount = getCountByPspIdsAndFlowActionIdAndCurrency(pspIds, flowActionId, currency);
-    return recordCount == pspIds.size();
-  }
-
-  public long getCountByPspIdsAndFlowActionIdAndCurrency(
-      List<String> pspIds, String flowActionId, String currency) {
-    return pspOperationRepository.countByPspIdsAndFlowActionIdAndCurrency(
-        pspIds, flowActionId, currency);
-  }
-
   @Override
   public PspOperation getPspOperationIfEnabled(String pspId, String flowActionId) {
     PspOperation pspOperation =
-        pspOperationRepository.findByPspIdAndFlowActionId(pspId, flowActionId);
+        pspOperationRepository
+            .findByPspIdAndFlowActionId(pspId, flowActionId)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, ErrorCode.PSP_OPERATION_NOT_FOUND.getCode()));
+
     if (pspOperation.getStatus() != Status.ENABLED) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND, ErrorCode.PSP_OPERATION_STATUS_INVALID.getCode());
@@ -52,8 +44,7 @@ public class PspOperationsServiceImpl implements PspOperationsService {
     log.debug(
         "Fetching flow definition ID for pspId: {} and flowActionId: {}", pspId, flowActionId);
 
-    PspOperation pspOperation =
-        pspOperationRepository.findByPspIdAndFlowActionId(pspId, flowActionId);
+    PspOperation pspOperation = getPspOperationIfEnabled(pspId, flowActionId);
     String flowDefinitionId = pspMapper.extractFlowDefinitionId(pspOperation);
 
     log.debug(
