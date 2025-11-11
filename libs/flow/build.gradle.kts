@@ -1,5 +1,22 @@
 plugins {
     id("build.library")
+    id("maven-publish")
+}
+
+group = "connxt.flow"
+version = "0.0.1-SNAPSHOT"
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }
 
 dependencies {

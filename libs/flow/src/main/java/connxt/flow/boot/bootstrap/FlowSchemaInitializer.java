@@ -1,20 +1,22 @@
-package connxt.flow.autoconfigure;
+package connxt.flow.boot.bootstrap;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
-class FlowSchemaInitializer implements ApplicationRunner {
+public class FlowSchemaInitializer {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(FlowSchemaInitializer.class);
+
+  private static final Map<String, String> ENUM_DDL = new LinkedHashMap<>();
   private static final Map<String, String> TABLE_DDL = new LinkedHashMap<>();
   private static final List<String> INDEX_DDL =
       List.of(
@@ -28,6 +30,12 @@ class FlowSchemaInitializer implements ApplicationRunner {
           "CREATE INDEX IF NOT EXISTS idx_flow_definitions_flow_action_id ON flow_definitions(flow_action_id)");
 
   static {
+    ENUM_DDL.put(
+        "flow_status",
+        """
+        CREATE TYPE flow_status AS ENUM ('ENABLED', 'DISABLED')
+        """);
+
     TABLE_DDL.put(
         "flow_types",
         """
@@ -65,7 +73,7 @@ class FlowSchemaInitializer implements ApplicationRunner {
           id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
           logo TEXT,
-          status status NOT NULL DEFAULT 'ENABLED',
+          status flow_status NOT NULL DEFAULT 'ENABLED',
           credential_schema JSONB NOT NULL DEFAULT '{}',
           input_schema JSONB NOT NULL DEFAULT '{}',
           flow_type_id TEXT NOT NULL REFERENCES flow_types(id),
@@ -96,17 +104,41 @@ class FlowSchemaInitializer implements ApplicationRunner {
 
   private final JdbcTemplate jdbcTemplate;
 
-  @Override
-  public void run(ApplicationArguments args) {
-    TABLE_DDL.forEach(
-        (table, ddl) -> {
-          if (!tableExists(table)) {
-            log.info("Creating flow table '{}'", table);
-            jdbcTemplate.execute(ddl);
-          }
-        });
+  public void initialize() {
+    LOGGER.info("Starting flow schema bootstrap");
+    try {
+      ENUM_DDL.forEach(
+          (type, ddl) -> {
+            if (!enumTypeExists(type)) {
+              LOGGER.info("Creating flow enum type '{}'", type);
+              jdbcTemplate.execute(ddl);
+            }
+          });
 
-    INDEX_DDL.forEach(sql -> jdbcTemplate.execute(sql));
+      TABLE_DDL.forEach(
+          (table, ddl) -> {
+            if (!tableExists(table)) {
+              LOGGER.info("Creating flow table '{}'", table);
+              jdbcTemplate.execute(ddl);
+            }
+          });
+
+      INDEX_DDL.forEach(sql -> jdbcTemplate.execute(sql));
+      LOGGER.info("Flow schema bootstrap completed");
+    } catch (DataAccessException ex) {
+      LOGGER.warn(
+          "Flow schema initialization skipped due to database access failure: {}", ex.getMessage());
+      LOGGER.debug("Flow schema initialization error", ex);
+    }
+  }
+
+  private boolean enumTypeExists(String typeName) {
+    Boolean exists =
+        jdbcTemplate.queryForObject(
+            "SELECT EXISTS (SELECT 1 FROM pg_type WHERE typname = ?)",
+            Boolean.class,
+            typeName);
+    return Boolean.TRUE.equals(exists);
   }
 
   private boolean tableExists(String tableName) {
