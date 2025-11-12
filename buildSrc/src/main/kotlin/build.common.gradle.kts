@@ -12,6 +12,21 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    mavenLocal()
+    maven {
+        url = uri("https://pkgs.dev.azure.com/tech4jc/_packaging/fynxt-libs/maven/v1")
+        val username = System.getenv("FYNXT_LIBS_USERNAME")
+        val password = System.getenv("FYNXT_LIBS_PASSWORD")
+        if (!username.isNullOrBlank() && !password.isNullOrBlank()) {
+            credentials {
+                this.username = username
+                this.password = password
+            }
+        }
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
 }
 
 // Java compilation options to preserve parameter names for reflection

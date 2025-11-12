@@ -102,6 +102,6 @@ email:
   sender-address: ${EMAIL_SENDER_ADDRESS}
   enable-detailed-logging: false
 
-connxt:
+fynxt:
   flow:
     enabled: true

@@ -2,10 +2,6 @@ plugins {
     id("build.service")
 }
 
-repositories {
-    mavenLocal()
-}
-
 dependencies {
     // Spring Boot BOM for version management
     implementation(platform(libs.spring.boot.bom))
@@ -31,7 +27,7 @@ dependencies {
     implementation(project(":libs:email"))
     implementation(project(":libs:jwt"))
 
-    implementation("connxt.flow:flow:0.0.1-SNAPSHOT")
+    implementation(libs.flow)
 
     implementation(libs.mapstruct)
     annotationProcessor(libs.mapstruct.processor)
