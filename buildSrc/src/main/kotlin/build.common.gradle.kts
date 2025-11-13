@@ -12,7 +12,7 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    mavenLocal()
+    // mavenLocal()
     maven {
         url = uri("https://pkgs.dev.azure.com/tech4jc/_packaging/fynxt-libs/maven/v1")
         val username = System.getenv("FYNXT_LIBS_USERNAME")

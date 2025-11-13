@@ -37,7 +37,8 @@ public class JpaConfig {
   public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
     LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
     em.setDataSource(dataSource());
-    em.setPackagesToScan("connxt");
+    em.setPackagesToScan(
+        "connxt", "fynxt.flowtype", "fynxt.flowaction", "fynxt.flowtarget", "fynxt.flowdefinition");
     em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
     return em;
   }

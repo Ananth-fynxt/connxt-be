@@ -109,7 +109,7 @@ azure-communication-services-email = { group = "com.azure", name = "azure-commun
 # =============================================================================
 # INTERNAL LIBRARIES
 # =============================================================================
-flow = { group = "fynxt.flow", name = "flow", version.ref = "flow-lib" }
+flow = { group = "com.fynxt", name = "fynxt-lowcode-flow-starter", version.ref = "flow-lib" }
 
 # =============================================================================
 # CACHING DEPENDENCIES (Versions managed by version.ref)
