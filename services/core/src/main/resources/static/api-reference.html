@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Org API Reference</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <script id="api-reference" data-url="/v3/api-docs"></script>
+    <script>
+      const configuration = {
+        theme: "default",
+        documentDownloadType: true,
+        hideModels: true,
+      };
+      const apiReference = document.getElementById("api-reference");
+      apiReference.dataset.configuration = JSON.stringify(configuration);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  </body>
+</html>
+

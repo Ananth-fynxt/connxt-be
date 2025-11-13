@@ -2,7 +2,6 @@ package connxt.shared.config;
 
 import java.util.List;
 
-import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.media.StringSchema;
-import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
@@ -52,7 +49,6 @@ public class SwaggerConfig {
         .group("public")
         .pathsToMatch("/api/v1/**")
         .packagesToScan("connxt")
-        .addOpenApiCustomizer(globalHeadersCustomiser())
         .build();
   }
 
@@ -82,50 +78,5 @@ public class SwaggerConfig {
 
   private SecurityRequirement createSecurityRequirement() {
     return new SecurityRequirement().addList("bearerAuth");
-  }
-
-  public OpenApiCustomizer globalHeadersCustomiser() {
-    return openApi -> {
-      openApi
-          .getPaths()
-          .values()
-          .forEach(
-              pathItem ->
-                  pathItem
-                      .readOperations()
-                      .forEach(
-                          operation -> {
-                            operation.addParametersItem(createSessionTokenHeader());
-                            operation.addParametersItem(createBrandIdHeader());
-                            operation.addParametersItem(createEnvironmentIdHeader());
-                          }));
-    };
-  }
-
-  private Parameter createSessionTokenHeader() {
-    return new Parameter()
-        .name("X-SESSION-TOKEN")
-        .in("header")
-        .description("Session token for authentication.")
-        .required(false)
-        .schema(new StringSchema());
-  }
-
-  private Parameter createBrandIdHeader() {
-    return new Parameter()
-        .name("X-BRAND-ID")
-        .in("header")
-        .description("Brand ID for authentication.")
-        .required(false)
-        .schema(new StringSchema());
-  }
-
-  private Parameter createEnvironmentIdHeader() {
-    return new Parameter()
-        .name("X-ENV-ID")
-        .in("header")
-        .description("Environment ID for authentication.")
-        .required(false)
-        .schema(new StringSchema());
   }
 }

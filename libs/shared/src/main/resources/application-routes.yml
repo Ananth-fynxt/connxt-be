@@ -14,3 +14,5 @@ connxt:
       - "/api/v1/health/**"
       - "/api/v1/auth/**"
       - "/api/v1/external/**"
+      - "/api-reference.html"
+      - "/api-reference/**"
