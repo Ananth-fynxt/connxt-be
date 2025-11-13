@@ -26,7 +26,8 @@ dependencies {
     implementation(project(":libs:denovm"))
     implementation(project(":libs:email"))
     implementation(project(":libs:jwt"))
-    implementation(project(":libs:flow"))
+
+    implementation(libs.flow)
 
     implementation(libs.mapstruct)
     annotationProcessor(libs.mapstruct.processor)

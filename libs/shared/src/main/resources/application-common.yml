@@ -101,3 +101,7 @@ email:
   connection-string: ${EMAIL_CONNECTION_STRING}
   sender-address: ${EMAIL_SENDER_ADDRESS}
   enable-detailed-logging: false
+
+fynxt:
+  flow:
+    enabled: true

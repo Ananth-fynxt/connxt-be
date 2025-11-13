@@ -42,6 +42,11 @@ caffeine = "3.1.8"
 # =============================================================================
 aspectj = "1.9.21"
 
+# =============================================================================
+# INTERNAL LIBRARIES
+# =============================================================================
+flow-lib = "0.0.3-SNAPSHOT"
+
 [libraries]
 # SPRING BOOT BOM & STARTERS (Versions managed by BOM)
 # =============================================================================
@@ -100,6 +105,11 @@ hypersistence = { group = "io.hypersistence", name="hypersistence-utils-hibernat
 # EMAIL SERVICE DEPENDENCIES (Versions managed by version.ref)
 # =============================================================================
 azure-communication-services-email = { group = "com.azure", name = "azure-communication-email", version.ref = "azure-communication-services" }
+
+# =============================================================================
+# INTERNAL LIBRARIES
+# =============================================================================
+flow = { group = "com.fynxt", name = "fynxt-lowcode-flow-starter", version.ref = "flow-lib" }
 
 # =============================================================================
 # CACHING DEPENDENCIES (Versions managed by version.ref)
